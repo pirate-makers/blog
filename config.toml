@@ -28,7 +28,8 @@ disqusShortname = "prune998"
 
     hidecredits = false
     hidecopyright = false
-
+    commit = true
+    
     rtl = false
 
     math = true
