@@ -3,7 +3,7 @@ title = "Pirate Makers"
 theme = "hugo-coder"
 languagecode = "en"
 defaultcontentlanguage = "en"
-publishDir = "docs"
+# publishDir = "docs"
 
 paginate = 20
 canonifyurls = true
