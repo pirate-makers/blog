@@ -26,10 +26,10 @@ disqusShortname = "prune998"
 
     footercontent = "All Right Reserved."
 
-    hidecredits = false
+    hidecredits = true
     hidecopyright = false
     commit = true
-    
+
     rtl = false
 
     math = true

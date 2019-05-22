@@ -18,4 +18,4 @@ fi
 echo "Generating site"
 hugo
 
-cd public && git add --all && git commit -m "publishing ${buildtime} ${version}" && cd ..
+cd public && git add --all && git commit -m "publishing ${buildtime} ${version}" && git push && cd ..
