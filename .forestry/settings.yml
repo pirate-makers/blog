@@ -1,6 +1,6 @@
 ---
 new_page_extension: md
-auto_deploy: true
+auto_deploy: false
 admin_path: ''
 webhook_url: 
 sections:
@@ -22,7 +22,7 @@ file_template: ":filename:"
 instant_preview: true
 build:
   preview_command: hugo -E -F -D -b $DEPLOY_URL -d public
-  publish_command: hugo -d public
+  publish_command: hugo -d public --enableGitInfo --baseURL https://piratemakers.ca
   preview_env:
   - HUGO_ENV=staging
   - HUGO_VERSION=0.55.6
