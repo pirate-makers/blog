@@ -1,4 +1,9 @@
 ---
 label: frontmatter
 hide_body: true
-fields: []
+fields:
+- name: assets
+  type: image_gallery
+  config: {}
+  label: assets
+  description: cc
