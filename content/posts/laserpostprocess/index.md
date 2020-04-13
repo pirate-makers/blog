@@ -1,7 +1,7 @@
 +++
 categories = []
-date = "2020-04-11T14:29:43.000-04:00"
-description = "Fusion 360 Laser Post-Processor"
+date = 2020-04-11T18:29:43Z
+description = "Laser Post-Processor for Autodesk Fusion 360 and Shapeoko CNC"
 externalLink = ""
 series = []
 slug = ""
@@ -9,7 +9,6 @@ tags = ["laser", "shapeoko", "fusion360"]
 title = "Laser Post-Processor for Fusion 360 that works on Shapeoko"
 
 +++
-
 I bought a 10W+ Endurence Laser last year. This is an addon to mount on my Shapeoko3 CNC.
 It's really easy to setup as you only have to attach it on your spindle and connect it to the PWM port of the Shapeoko controler. Don't forget to unplug your spindle :)
 
