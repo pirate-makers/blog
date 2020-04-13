@@ -20,7 +20,7 @@ title = "Welcome to a Pirate world"
 </section>
 {{< /highlight >}}
 
-``` js
+```js
 var foo = function (bar) {
   return bar++;
 };

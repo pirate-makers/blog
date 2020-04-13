@@ -5,7 +5,7 @@ slug = "about"
 
 ## Why Pirate
 
-Because !
+Because Pirates are free people which values friendship and freewill !
 
 ## Who are the Pirate Makers
 
