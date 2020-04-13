@@ -11,7 +11,7 @@ title = "Laser Post-Processor for Fusion 360 that works on Shapeoko"
 +++
 bought a [10W+ Endurance Laser](https://endurancelasers.com/diode-lasers/10watt-endurance-laser-plus/) last year. This is an addon to mount on my Shapeoko3 CNC. It's really easy to setup as you only have to attach it on your spindle and connect it to the PWM port of the Shapeoko controler. Don't forget to unplug your spindle :)
 
-I mostly use Autodesk Fusion 360 when I create my CNC projects, and sadly, I found no post-processor that could create Gcode files compatible with the Shapeoko 3 (GRBL).
+I mostly use [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/students-teachers-educators) when I create my CNC projects, and sadly, I found no post-processor that could create Gcode files compatible with the Shapeoko 3 (GRBL).
 Differences between a spindle and a laser are really few...:
 
 * PWM goes from 0 to 255
@@ -22,4 +22,4 @@ So you need a special Post-Processor to take care of this.
 
 I cloned an existing one and adapted to work with a laser.
 
-You can find the code and instructions at https://github.com/pirate-makers/shapeokolaser
+You can find the code and instructions at [https://github.com/pirate-makers/shapeokolaser](https://github.com/pirate-makers/shapeokolaser)
