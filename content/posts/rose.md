@@ -3,6 +3,6 @@ assets = ["/uploads/IMG_8203.jpg"]
 draft = true
 
 +++
-test
+![](/uploads/IMG_8203.jpg)
 
-\[object HTMLLIElement\]
+TEst
