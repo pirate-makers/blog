@@ -8,18 +8,19 @@ description: ""
 
 subtitle: "A few months back I wrote a blog post on how to use Cert-Manager to provide SSL certificates for Istio."
 
-image: "/posts/2018-06-26_istio-0.8.0-envoy-certmanager-lets-encrypt-for-tls/images/1.jpeg" 
+image: "images/1.jpeg" 
 images:
- - "/posts/2018-06-26_istio-0.8.0-envoy-certmanager-lets-encrypt-for-tls/images/1.jpeg"
- - "/posts/2018-06-26_istio-0.8.0-envoy-certmanager-lets-encrypt-for-tls/images/2.png"
+ - "images/1.jpeg"
+ - "images/2.png"
 
+tags: ["devops", "servicemesh", "kubernetes"]
 
 aliases:
     - "/istio-0-8-0-envoy-cert-manager-lets-encrypt-for-tls-d26bee634541"
 
 ---
 
-![image](/posts/2018-06-26_istio-0.8.0-envoy-certmanager-lets-encrypt-for-tls/images/1.jpeg#layoutTextWidth)
+![image](images/1.jpeg#layoutTextWidth)
 
 
 A few months back I wrote a blog post on [how to use Cert-Manager to provide SSL certificates for Istio](https://medium.com/@prune998/istio-envoy-cert-manager-lets-encrypt-for-tls-14b6a098f289).
@@ -40,18 +41,33 @@ Well, let’s start from scratch and we’ll see…
 Setting up Istio is almost straightforward… do it the way you want, using the Helm chart with Tiller, without it or go with the Demo manifest that you may have (or not) depending on where you got Istio from.
 
 My personal flavour is to use the Helm binary to create a static Deployment Manifest and use Kubectl to apply it. It goes something like :
-`helm template install/kubernetes/helm/istio --name istio --set tracing.enabled=false --set ingress.enabled=false --set servicegraph.enabled=false --set prometheus.enabled=false --set global.proxy.policy=disabled --set grafana.enabled=false --namespace istio-system &gt; install/kubernetes/generated.yaml``kubectl create namespace istio-system``kubectl apply -n istio-system -f install/kubernetes/generated.yaml`
+```bash
+helm template install/kubernetes/helm/istio --name istio \
+  --set tracing.enabled=false --set ingress.enabled=false \
+  --set servicegraph.enabled=false --set prometheus.enabled=false \
+  --set global.proxy.policy=disabled --set grafana.enabled=false \
+  --namespace istio-system > install/kubernetes/generated.yaml
+  
+  kubectl create namespace istio-system
+  kubectl apply -n istio-system -f install/kubernetes/generated.yaml
+```
 
 ### Setup Cert-Manager
 
 It’s almost the same for cert-manager. Just clone it and apply the Manifest :
-`git clone [https://github.com/jetstack/cert-manager.git](https://github.com/jetstack/cert-manager.git)  
-cd [cert-manager](https://github.com/jetstack/cert-manager.git)  
-kubectl apply -f cert-manager/contrib/manifests/cert-manager/with-rbac.yaml`
+```bash
+git clone https://github.com/jetstack/cert-manager.git
+cd cert-manager
+kubectl apply -f cert-manager/contrib/manifests/cert-manager/with-rbac.yaml
+```
 
 If it goes well you should see a pod started :
-`kubectl -n cert-manager get pods``NAME                            READY     STATUS    RESTARTS   AGE  
-cert-manager-794b55b96d-9b9zh   1/1       Running   0          3h`
+```bash
+kubectl -n cert-manager get pods
+
+NAME                            READY     STATUS    RESTARTS   AGE  
+cert-manager-794b55b96d-9b9zh   1/1       Running   0          3h
+```
 
 ### Setup AWS Route53
 
@@ -63,29 +79,31 @@ I decided to use the DNS01 provider, which is supported by both Cert-Manager and
 
 #### Setup Policy
 
-go to the AWS Dashboard -&gt; IAM -&gt; policies ([https://console.aws.amazon.com/iam/home?#/policies](https://console.aws.amazon.com/iam/home?#/policies)) and create a Policy like :
-`{  
-    &#34;Version&#34;: &#34;2012-10-17&#34;,  
-    &#34;Statement&#34;: [  
+go to the AWS Dashboard -> IAM -> policies ([https://console.aws.amazon.com/iam/home?#/policies](https://console.aws.amazon.com/iam/home?#/policies)) and create a Policy like :
+```yaml
+  {  
+    "Version": "2012-10-17",  
+    "Statement": [  
         {  
-            &#34;Effect&#34;: &#34;Allow&#34;,  
-            &#34;Action&#34;: [  
-                &#34;route53:GetHostedZone&#34;,  
-                &#34;route53:ListHostedZones&#34;,  
-                &#34;route53:ListHostedZonesByName&#34;,  
-                &#34;route53:GetHostedZoneCount&#34;,  
-                &#34;route53:ChangeResourceRecordSets&#34;,  
-                &#34;route53:ListResourceRecordSets&#34;,  
-                &#34;route53:GetChange&#34;  
+            "Effect": "Allow",  
+            "Action": [  
+                "route53:GetHostedZone",  
+                "route53:ListHostedZones",  
+                "route53:ListHostedZonesByName",  
+                "route53:GetHostedZoneCount",  
+                "route53:ChangeResourceRecordSets",  
+                "route53:ListResourceRecordSets",  
+                "route53:GetChange"  
             ],  
-            &#34;Resource&#34;: &#34;*&#34;  
+            "Resource": "*"  
         }  
     ]  
-}`
+  }
+```
 
 Here is mine :
 
-![image](/posts/2018-06-26_istio-0.8.0-envoy-certmanager-lets-encrypt-for-tls/images/2.png#layoutTextWidth)
+![image](images/2.png#layoutTextWidth)
 
 
 #### Setup User
@@ -93,7 +111,7 @@ Here is mine :
 Go to the `user` tab and create a new user, applying the above policy to it. Select the **Programmatic access checkbox.** On the last page you will find the Access Key and the Secret Key. Note them down.
 
 You will need to set the Secret Key in a Kubernetes Secret so the Cert-Manager can use it. This can be done by a single shell command using, again, kubectl :
-`kubectl -n cert-manager create secret generic prod-route53-credentials-secret --from-literal=secret-access-key=&lt;your secret key here&gt;`
+`kubectl -n cert-manager create secret generic prod-route53-credentials-secret --from-literal=secret-access-key=<your secret key here>`
 
 This way the key is securely usable by your K8s cluster.
 
@@ -108,15 +126,16 @@ This ClusterIssuer is using the `acme-v02` API.
 Set the `privateKeySecretRef` to the name of the secret you want Cert-Manager to use. It have to be a new secret as it will be used to elect the `master` Cert-Manager instance in case you start many of them.
 
 `secretAccessKeySecretRef` is the name of the secret we just created before.
-`apiVersion: certmanager.k8s.io/v1alpha1  
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1  
 kind: ClusterIssuer  
 metadata:  
   name: letsencrypt-prod  
   namespace: cert-manager  
 spec:  
   acme:  
-    server: [https://acme-v02.api.letsencrypt.org/directory](https://acme-v02.api.letsencrypt.org/directory)  
-    email: [m](mailto:sthomas@moncoyote.com)e@ici.com  
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: me@ici.com  
     privateKeySecretRef:  
       name: letsencrypt-prod  
     dns01:  
@@ -124,10 +143,11 @@ spec:
         - name: aws-dns-prod  
           route53:  
             region: ca-central-1  
-            accessKeyID: &lt;your access key from AWS&gt;  
+            accessKeyID: <your access key from AWS>  
             secretAccessKeySecretRef:  
               name: prod-route53-credentials-secret  
-              key: secret-access-key`
+              key: secret-access-key
+```
 
 #### Certificate
 
@@ -146,7 +166,8 @@ In fact, two things here almost prevent us from doing so :
 Someone started a discussion about that [there](https://github.com/istio/istio/issues/6486#issuecomment-400367378), which I commented.
 
 So, for now, I recommend going with only one Certificate with all your FQDNs in it. Like :
-`apiVersion: certmanager.k8s.io/v1alpha1  
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1  
 kind: Certificate  
 metadata:  
   name: domain-ingress-certs  
@@ -168,7 +189,8 @@ spec:
   issuerRef:  
     kind: ClusterIssuer  
     name: letsencrypt-prod  
-  secretName: istio-ingressgateway-certs`
+  secretName: istio-ingressgateway-certs
+```
 
 Let’s break this down :
 
@@ -180,7 +202,7 @@ Let’s break this down :
 
 When you push that using `kubectl`, Cert-Manager will connect to your AWS account and create some TXT records that will be used by Let’sEncrypt to ensure that you own the right to update the DNS.   
 They will look like :
-`_acme-challenge.my.domain.com TXT &#34;some value here&#34;`
+`_acme-challenge.my.domain.com TXT "some value here"`
 
 Once the DNS propagated and the Domain Ownership validated, Cert-Manager will create your **istio-ingressgateway-certs** secret, with two files in it : `tls.crt`and `tls.key`
 
@@ -193,7 +215,8 @@ With the new API starting from version 0.8.0, you have two resources to setup : 
 #### Gateway
 
 The gateway is your OSI Layer 4 configuration. It tells Istio (Envoy) to listen on a port and, if needed, activate SSL. (ok, ssl is not layer4, but…well, it’s complicated :) )
-`apiVersion: networking.istio.io/v1alpha3  
+```yaml
+apiVersion: networking.istio.io/v1alpha3  
 kind: Gateway  
 metadata:  
   name: web-gateway  
@@ -220,7 +243,8 @@ spec:
     tls:  
       mode: SIMPLE  
       privateKey: /etc/istio/ingressgateway-certs/tls.key  
-      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt`
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+```
 
 So, we define here a `Gateway` name `web-gateway`, answering `my.domain.com` on both HTTP and HTTPS and `subnet.domain.com` and HTTPS.  
 For HTTPS, I had to double the DNS names with the `:port` extension. I still don’t know if it’s a bug or a feature, but I opened another issue for that [here](https://github.com/istio/istio/issues/6469).
@@ -234,7 +258,8 @@ As a side note here, DON’T create another gateway for port 443 or 80 in the cl
 
 I don’t know if I was mistaken or if something changed with Istio 1.0.0, but you CAN create multiple gateways on the same port. Just use different names and use the SAME certificate file, as Istio IngressGateway still only use one Secret for now.  
 Ex :
-`apiVersion: networking.istio.io/v1alpha3  
+```yaml
+apiVersion: networking.istio.io/v1alpha3  
 kind: Gateway  
 metadata:  
   name: gateway-mydomain  
@@ -274,7 +299,8 @@ spec:
     tls:  
       mode: SIMPLE  
       privateKey: /etc/istio/ingressgateway-certs/tls.key  
-      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt`
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+```
 
 #### VirtualService
 
@@ -282,7 +308,8 @@ In fact, we’ve done everything we needed to get an SSL cert via Let’s Encryp
 The VirtualService is the layer 6/7 configuration, which will split the traffic to your Kubernetes Services.
 
 Since we’re here anyway, let me show you one possible config :
-`apiVersion: networking.istio.io/v1alpha3  
+```yaml
+apiVersion: networking.istio.io/v1alpha3  
 kind: VirtualService  
 metadata:  
   name: domain-http  
@@ -301,10 +328,12 @@ spec:
     - destination:  
         host: my-http-service  
         port:  
-          number: 1080`
+          number: 1080
+```
 
 You can also create another one for the subdomain if you want it to go to another website :
-`apiVersion: networking.istio.io/v1alpha3  
+```yaml
+apiVersion: networking.istio.io/v1alpha3  
 kind: VirtualService  
 metadata:  
   name: subnet-http  
@@ -323,7 +352,8 @@ spec:
     - destination:  
         host: subnet-http-service  
         port:  
-          number: 1081`
+          number: 1081
+```
 
 ### Conslusion
 

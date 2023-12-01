@@ -8,16 +8,17 @@ description: ""
 
 subtitle: "In this article you’ll learn how we bundle our Micro-Services in a Snapshot for deployment in Kubernetes."
 
-image: "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/2.png" 
+image: "images/2.png" 
 images:
- - "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/1.jpg"
- - "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/2.png"
- - "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/3.png"
- - "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/4.png"
- - "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/5.png"
- - "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/6.png"
- - "/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/7.png"
+ - "images/1.jpg"
+ - "images/2.png"
+ - "images/3.png"
+ - "images/4.png"
+ - "images/5.png"
+ - "images/6.png"
+ - "images/7.png"
 
+tags: ["devops", "gitops", "kubernetes"]
 
 aliases:
     - "/micro-services-deployment-as-snapshots-b1c5a7a66d57"
@@ -28,7 +29,7 @@ In this article you’ll learn how we bundle our Micro-Services in Snapshots, ta
 
 ### Micro-Services
 
-![image](/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/1.jpg#layoutTextWidth)
+![image](images/1.jpg#layoutTextWidth)
 
 
 Now we have cut our old monolith into a lot of small micro-services, we need to deploy them.
@@ -102,7 +103,7 @@ As you constantly iterate over them, versions piles up.
 At some point, you take a snapshot and consider that your **Release**.  
 That’s what we did lately.
 
-![image](/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/2.png#layoutTextWidth)
+![image](images/2.png#layoutTextWidth)
 Example snapshot
 
 
@@ -111,27 +112,27 @@ We build an admin tool using VueJs + Vuetify and a Go backend app to manage our 
 
 The worflow is now :
 
-![image](/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/3.png#layoutTextWidth)
+![image](images/3.png#layoutTextWidth)
 
 
 During the deployment process you can select which variable sets you want to use, like _dev_, _integration_, _prod_…
 
-![image](/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/4.png#layoutTextWidth)
+![image](images/4.png#layoutTextWidth)
 
 
 All this gives us the flexibility to deploy many time the same micro-service with different commit versions, like :
 
-![image](/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/5.png#layoutTextWidth)
+![image](images/5.png#layoutTextWidth)
 
 
 All this finally translate to JSON to be stored, for the moment, in a Git repository :
 
-![image](/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/6.png#layoutTextWidth)
+![image](images/6.png#layoutTextWidth)
 
 
 Another tab of the application allows to compare our snapshot with one Kubernetes Namespace pods/deployments, so we can check what the changes will be when we deploy. Here, the deployed Tower micro-service (in orange) is newer than the one selected in the snapshot (in blue) :
 
-![image](/content/posts/2019-06-04_microservices-deployment-as-snapshots/images/7.png#layoutTextWidth)
+![image](images/7.png#layoutTextWidth)
 
 
 As this imply, we don’t version our micro-services. We use the Git Commit Hash as the version. The PRO of doing this is that we don’t maintain the versions and we use the full commit tree and commit message as a reference of what was done. The CONS is that Commit Hash are not ordered by time, so you need to refer to the commit tree to know if this version is “older” than the other one.

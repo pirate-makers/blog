@@ -1,99 +1,159 @@
 baseurl = "https://piratemakers.ca"
 title = "Pirate Makers"
-theme = "coder"
-languagecode = "en"
+# theme = "coder"
+theme = "hello-friend-ng"
+languagecode = "en-us"
 defaultContentLanguage = "en"
 # defaultContentLanguageInSubdir = true
 # publishDir = "docs"
 cleanDestinationDir = true
 copyright = "Prune @2023"
 paginate = 20
-# canonifyurls = true
-enableEmoji = true
-# enableRobotsTXT = true
+rssLimit  = 50  # Maximum number of items in the RSS feed.
 
-pygmentsstyle = "bw"
-pygmentscodefences = true
-pygmentscodefencesguesssyntax = true
+archetypeDir = "archetypes"
+contentDir   = "content"
+dataDir      = "data"
+layoutDir    = "layouts"
+publishDir   = "public"
+
+buildDrafts  = false
+buildFuture  = false
+buildExpired = false
+canonifyURLs = true
+
+enableRobotsTXT = true
+enableGitInfo   = true
+enableEmoji     = true
+enableMissingTranslationPlaceholders = false
+disableRSS     = false
+disableSitemap = false
+disable404     = false
+disableHugoGeneratorInject = false
+
+PygmentsCodeFences = true
+PygmentsStyle = "monokai"
 
 disqusShortname = "piratemakers-ca"
 
+[permalinks]
+  posts = "/posts/:year/:month/:title/"
+
+[blackfriday]
+  hrefTargetBlank = true
+
 [markup.highlight]
     style = "monokai"
-
-# [languages]
-#     [languages.fr]
-#         contentDir = 'content/fr'
-#         disabled = false
-#         languageCode = 'fr-FR'
-#         languageDirection = 'ltr'
-#         languageName = 'French'
-#         title = 'Pirate Makers'
-#         weight = 2
-#         [languages.fr.params]
-#             subtitle = 'Referenz, Tutorials und Erklärungen'
-#     [languages.en]
-#         contentDir = 'content/en'
-#         disabled = false
-#         languageCode = 'en-US'
-#         languageDirection = 'ltr'
-#         languageName = 'English'
-#         title = 'Pirate Makers'
-#         weight = 1
-#         [languages.en.params]
-#             subtitle = 'Reference, Tutorials, and Explanations'
-
+    tabWidth = 2
+    
 [imaging]
-    bgColor = '#ffffff'
-    hint = 'photo'
-    quality = 75
-    resampleFilter = 'Box'
+  bgColor = '#ffffff'
+  hint = 'photo'
+  quality = 75
+  resampleFilter = 'Box'
 
 [imaging.exif]
-    disableDate = false
-    disableLatLong = false
-    excludeFields = ''
-    includeFields = ''
+  disableDate = false
+  disableLatLong = false
+  excludeFields = ''
+  includeFields = ''
 
 [params]
-    author = "Prune"
-    info = "Home of the Modern Makers and Pirates"
-    description = "Pirate Makers website"
-    keywords = "blog,developer,personal,cnc,shapeoko,maker,pirate,hacker,go,golang,devops,gitops"
-    avatarurl = "images/skull.jpg"
-    # gravatar = "prune@lecentre.net"
+  author = "Prune"
+  info = "Home of the Modern Makers and Pirates"
+  description = "Pirate Makers website"
+  # homeSubtitle = "Making, but differently..."
+  keywords = "blog,developer,personal,cnc,shapeoko,maker,pirate,hacker,go,golang,devops,gitops"
+  avatarurl = "images/skull.jpg"
+  # gravatar = "prune@lecentre.net"
+  images = [""]
 
-    #faviconSVG = "/img/favicon.svg"
-    favicon_32 = "/img/favicon-32x32.png"
-    favicon_16 = "/img/favicon-16x16.png"
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04"
 
-    footercontent = "All Right Reserved."
+  # Set a background for the homepage
+  # backgroundImage = "assets/images/background.jpg"
 
-    enableTwemoji = true
+  # Prefix of link to the git commit detail page. GitInfo must be enabled.
+  #
+  # gitUrl = ""
 
-    hidecredits = true
-    hidecopyright = false
-    commit = true
+  # Set disableReadOtherPosts to true in order to hide the links to other posts.
+  #
+  disableReadOtherPosts = false
 
-    rtl = false
+  # Sharing buttons
+  #
+  # There are a lot of buttons preconfigured. If you want to change them,
+  # generate the buttons here: https://sharingbuttons.io
+  # and add them into your own `layouts/partials/sharing-buttons.html`
+  #
+  enableSharingButtons = true
 
-    math = true
-    customCss = ["/css/custom.css"]
-    # customCss = ["css/custom.css"]
-    # customSCSS = ["scss/custom.scss"]
-    # customJS = ["js/custom.js"]
+  # Global language menu
+  #
+  # Enables the global language menu.
+  #
+  enableGlobalLanguageMenu = true
+
+  #faviconSVG = "/img/favicon.svg"
+  favicon_32 = "/img/favicon-32x32.png"
+  favicon_16 = "/img/favicon-16x16.png"
+
+  footercontent = "All Right Reserved."
+
+  enableTwemoji = true
+
+  hidecredits = true
+  hidecopyright = false
+  commit = true
+
+  rtl = false
+
+  math = true
+
+  # Integrate Javascript files or stylesheets by adding the url to the external assets or by
+  # linking local files with their path relative to the static folder, e.g. "css/styles.css"
+  #
+  customCSS = ["css/custom.css"]
+  customJS  = []
+
+  # Toggle this option need to rebuild SCSS, requires extended version of Hugo
+  #
+  justifyContent = false  # Set "text-align: justify" to .post-content.
 
 # Social links
-[[params.social]]
-    name = "Github"
-    icon = "fa fa-2x fa-github"
-    weight = 1
-    url = "https://github.com/pirate-makers/"
-[[params.social]]
-    name = "Twitter"
-    icon = "fa fa-2x fa-twitter"
-    weight = 3
-    url = "https://twitter.com/prune998/"
+# [[params.social]]
+#     name = "Github"
+#     icon = "fa fa-2x fa-github"
+#     weight = 1
+#     url = "https://github.com/pirate-makers/"
+# [[params.social]]
+#     name = "Twitter"
+#     icon = "fa fa-2x fa-twitter"
+#     weight = 3
+#     url = "https://twitter.com/prune998/"
+  [[params.social]]
+    name = "twitter"
+    url  = "https://twitter.com/prune998"
+
+  [[params.social]]
+    name = "email"
+    url  = "mailto:prune@pirate-makers.ca"
+
+  [[params.social]]
+    name = "github"
+    url  = "https://github.com/pirate-makers"
+
+  [[params.social]]
+    name = "linkedin"
+    url  = "https://www.linkedin.com/in/prune/"
+
+  [[params.social]]
+    name = "stackoverflow"
+    url  = "https://stackoverflow.com/users/2414380/prune"
 
 # Menu links
 [[menu.main]]
@@ -118,3 +178,57 @@ disqusShortname = "piratemakers-ca"
 [services]
   [services.disqus]
     shortname = 'piratemakers-ca'
+
+  # Custom footer 
+  # If you want, you can easily override the default footer with your own content. 
+  #
+  [params.footer]
+    trademark = 2023
+    rss = true
+    copyright = true
+    author = false
+
+    topText = ["Pirate Makers™"]
+    bottomText = [
+      "Powered by <a href=\"http://gohugo.io\">Hugo</a>"
+    ]
+
+  # Colors for favicons
+  #
+  [params.favicon.color]
+    mask = "#1b1c1d"
+    msapplication = "#1b1c1d"
+    theme = "#1b1c1d"
+
+  [params.Portrait]
+    path = "images/skull.jpg"
+    alt  = "Pirate Makers"
+    MaxWidth = "1768px"
+    Class = "avatar"
+
+  [params.logo]
+    # path = "images/skull.jpg"
+    logoMark     = ">"
+    logoText     = "Pirate Makers"
+    logoHomeLink = "/"
+    # Set true to remove the logo cursor entirely.
+    logoCursorDisabled = true
+    # Set to a valid CSS color to change the cursor in the logo.
+    # logoCursorColor    = "#67a2c9"
+    # Set to a valid CSS time value to change the animation duration, "0s" to disable.
+    # logoCursorAnimate  = "2s"
+    # Append the current url pathname to logoText 
+    # logoCursorPathname = true
+
+[languages]
+  [languages.en]
+    weight    = 1
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+  [languages.en.params]
+    homeSubtitle  = "Making, but differently..."
+
+  [languages.fr]
+    weight    = 2
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+  [languages.fr.params]
+    homeSubtitle  = "Bricoler, mais de maniere differente..."

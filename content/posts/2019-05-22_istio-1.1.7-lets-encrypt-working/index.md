@@ -9,17 +9,18 @@ description: ""
 subtitle: "It’s been almost a year since I first wrote about using Let’s Encrypt SSL Certificates with Istio, 0.8.0 at this time.
 Then I blogged…"
 
-image: "/content/posts/2019-05-22_istio-1.1.7-lets-encrypt-working/images/1.png" 
+image: "images/1.png" 
 images:
- - "/content/posts/2019-05-22_istio-1.1.7-lets-encrypt-working/images/1.png"
+ - "images/1.png"
 
+tags: ["devops", "servicemesh", "kubernetes"]
 
 aliases:
     - "/istio-1-1-7-lets-encrypt-working-9100cea9f503"
 
 ---
 
-![image](/content/posts/2019-05-22_istio-1.1.7-lets-encrypt-working/images/1.png#layoutTextWidth)
+![image](images/1.png#layoutTextWidth)
 
 
 It’s been almost a year since I first wrote about [using Let’s Encrypt SSL Certificates with Istio, 0.8.0](https://medium.com/@prune998/istio-0-8-0-envoy-cert-manager-lets-encrypt-for-tls-d26bee634541) at this time.  
@@ -42,7 +43,8 @@ This is done by adding this line to your Helm generation :
 _gateways.istio-ingressgateway.sds.enabled=true_
 
 Here is what I use to generate the manifests :
-`helm template install/kubernetes/helm/istio - name istio  
+```bash
+helm template install/kubernetes/helm/istio - name istio  
 - set tracing.enabled=false  
 - set ingress.enabled=false  
 - set gateways.istio-ingressgateway.enabled=true  
@@ -61,8 +63,9 @@ Here is what I use to generate the manifests :
 - set global.tracer.zipkin.address=zipkin.monitoring:9411  
 - set global.outboundTrafficPolicy.mode=REGISTRY_ONLY  
 - set galley.enabled=true  
-- set global.proxy.accessLogFile=&#34;/dev/stdout&#34;  
-- namespace istio-system &gt; install/kubernetes/generated.yaml`
+- set global.proxy.accessLogFile="/dev/stdout"  
+- namespace istio-system > install/kubernetes/generated.yaml
+```
 
 ### Usage
 
@@ -77,7 +80,8 @@ Here is what I did for testing :
 #### Certificate
 
 Create your certificate as usual… something like :
-`apiVersion: certmanager.k8s.io/v1alpha1  
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1  
 kind: Certificate  
 metadata:  
   name: cert-hello.mydomain.com  
@@ -89,14 +93,16 @@ spec:
   issuerRef:  
     kind: ClusterIssuer  
     name: letsencrypt-prod  
-  secretName: cert-hello.mydomain.com`
+  secretName: cert-hello.mydomain.com
+```
 
 This will create a new TLS secret named **cert-hello.mydomain.com**
 
 #### Gateway
 
 This is the fun part. In your Gateway, instead of giving the path to your key/cert, just set the keyword “SDS” :
-`apiVersion: networking.istio.io/v1alpha3  
+```yaml
+apiVersion: networking.istio.io/v1alpha3  
 kind: Gateway  
 metadata:  
   name: gw-hello-mydomain-com  
@@ -115,7 +121,8 @@ spec:
       credentialName: cert-hello.mydomain.com ← the certificate name you created above  
       mode: SIMPLE  
       privateKey: sds  
-      serverCertificate: sds`
+      serverCertificate: sds
+```
 
 And VOILA !
 

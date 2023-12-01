@@ -8,20 +8,21 @@ description: ""
 
 subtitle: "Welcome to the Kafka Operator (Magical) Mystery tour !"
 
-image: "/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/1.png" 
+image: "images/1.png" 
 images:
- - "/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/1.png"
- - "/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/2.png"
- - "/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/3.png"
- - "/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/4.png"
+ - "images/1.png"
+ - "images/2.png"
+ - "images/3.png"
+ - "images/4.png"
 
+tags: ["devops", "pubsub", "kubernetes"]
 
 aliases:
     - "/banzaicloud-kafka-operator-tour-56fca7d6261e"
 
 ---
 
-![image](/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/1.png#layoutTextWidth)
+![image](images/1.png#layoutTextWidth)
 
 
 ### Welcome to the Kafka Operator (Magical) Mystery tour !
@@ -35,7 +36,7 @@ Just check :
 *   [https://banzaicloud.com/blog/kafka-operator/](https://banzaicloud.com/blog/kafka-operator/)
 *   [https://github.com/banzaicloud/kafka-operator](https://github.com/banzaicloud/kafka-operator)
 
-EDIT : also check my other article for [Kafka cluster autoscaling](https://medium.com/@prune998/banzaicloud-kafka-operator-and-broker-autoscaling-1c7324260de1)
+EDIT : also check my other article for [Kafka cluster autoscaling](/posts/2019/10/banzaicloud-kafka-operator-and-broker-autoscaling/)
 
 ### Overview
 
@@ -57,27 +58,36 @@ Note that I’m not part of BanzaiCloud and I don’t get any advantage whatsoev
 
 ### Kafka Operator
 
-![image](/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/2.png#layoutTextWidth)
+![image](images/2.png#layoutTextWidth)
 
 
 Operator talks to the API server and watch for `kafkacluster` Resource. It also talks to [CruiseControl](https://github.com/linkedin/cruise-control), a Java application from Linkedin which is _“a general-purpose system that continually monitors our clusters and automatically adjusts the resources allocated to them to meet pre-defined performance goals”._ Finally it “talks to” Prometheus, watch for alerts and take actions.
 
 BanzaiCloud provides a Helm Chart (as too many others out there), so let’s use it. As I don’t use `Tiller`, I just use`helm template`:
-`git clone [https://github.com/banzaicloud/kafka-operator.git](https://github.com/banzaicloud/kafka-operator.git)``cd kafka-operator``helm template charts/kafka-operator \  
+```bash
+git clone https://github.com/banzaicloud/kafka-operator.git
+cd kafka-operator
+helm template charts/kafka-operator \  
 --set fullnameOverride=kafka \  
 --set prometheus.enabled=false \  
 --set prometheusMetrics.authProxy.enabled=false \  
---set operator.image.repository=&#34;&lt; private repo &gt;/kafka-operator&#34; \  
---set operator.image.tag=&#34;0.6.1&#34; \  
---set prometheus.server.configMapOverrideName=&#34;&#34; \  
+--set operator.image.repository="< private repo >/kafka-operator" \  
+--set operator.image.tag="0.6.1" \  
+--set prometheus.server.configMapOverrideName="" \  
 --set imagePullSecrets={docker-images-registry-secret} \  
---namespace tools &gt; charts/kafka-operator/generated.yaml``kubectl apply -n tools  charts/kafka-operator/generated.yaml`
+--namespace tools > charts/kafka-operator/generated.yaml
+kubectl apply -n tools  charts/kafka-operator/generated.yaml
+```
 
 You should have a running kafka operator now. Check using `kubectl` :
-`kubectl -n tools get pods  
+```bash
+kubectl -n tools get pods  
 NAME                             READY   STATUS    RESTARTS   AGE  
-kafka-operator-85b894b8c4-wjmt7  1/1     Running   0          28m`**Note** : I wasn’t able to upgrade from 0.5 to 0.6 version. The CRD namespace switched from [_kafkaclusters._**_banzaicloud_**_.banzaicloud_.io](http://kafkaclusters.banzaicloud.banzaicloud.io/) to [_kafkaclusters._**_kafka_**_.banzaicloud.io_](http://kafkaclusters.kafka.banzaicloud.io/).   
-Also, when deleting the old deployment I saw my Kafka pods deleted, removing the cluster one and for all.
+kafka-operator-85b894b8c4-wjmt7  1/1     Running   0          28m
+```
+
+**Note** : I wasn’t able to upgrade from 0.5 to 0.6 version. The CRD namespace switched from [_kafkaclusters._**_banzaicloud_**_.banzaicloud_.io](http://kafkaclusters.banzaicloud.banzaicloud.io/) to [_kafkaclusters._**_kafka_**_.banzaicloud.io_](http://kafkaclusters.kafka.banzaicloud.io/).   
+Also, when deleting the old deployment I saw my Kafka pods deleted, removing the cluster once and for all.
 
 In theory, it SHOULD have worked… a bit… It should have grow my cluster to a 6 node cluster, sync, and I should have been able to remove the old one.
 
@@ -90,7 +100,10 @@ Delete your Operator deployment : `kubectl -n tools delete deployment kafka-oper
 This should take care of all the pods, PVC… you may have to manually delete your PVs.
 
 Then delete everything in Zookeeper. This is needed if you change Kafka version or Broker IDs. Do not do this on Production !!
-`kubectl exec -ti  zk-zookeeper-0 bin/zkCli.sh``deleteall /admin  
+```bash
+kubectl exec -ti  zk-zookeeper-0 bin/zkCli.sh
+
+deleteall /admin  
 deleteall /brokers  
 deleteall /cluster  
 deleteall /config  
@@ -99,7 +112,8 @@ deleteall /controller_epoch
 deleteall /isr_change_notification  
 deleteall /kafka-manager  
 deleteall /latest_producer_id_block  
-deleteall /log_dir_event_notification`
+deleteall /log_dir_event_notification
+```
 
 ### KafkaCluster
 
@@ -112,42 +126,48 @@ I’m going to break down in may parts as it’s quite a huge spec…
 This is for a 3 nodes cluster named kf-kafka, using Zookeeper on port 2181 in the same namespace (alerting).
 
 #### Global spec
-`apiVersion: kafka.banzaicloud.io/v1beta1  
+```yaml
+apiVersion: kafka.banzaicloud.io/v1beta1  
 kind: KafkaCluster  
 metadata:  
   labels:  
-    controller-tools.k8s.io: &#34;1.0&#34;  
+    controller-tools.k8s.io: "1.0"  
     kafka_cr: kf-kafka  
   name: kf-kafka  
   namespace: alerting  
 spec:  
   headlessServiceEnabled: false  
   zkAddresses:  
-    - &#34;zk-zookeeper:2181&#34;  
+    - "zk-zookeeper:2181"  
   rackAwareness:  
     labels:  
-      - &#34;failure-domain.beta.kubernetes.io/region&#34;  
-      - &#34;failure-domain.beta.kubernetes.io/zone&#34;  
+      - "failure-domain.beta.kubernetes.io/region"  
+      - "failure-domain.beta.kubernetes.io/zone"  
   oneBrokerPerNode: false  
-  clusterImage: &#34;your-own-repo/kafka:2.3.0.7&#34;  
+  clusterImage: "your-own-repo/kafka:2.3.0.7"  
   rollingUpgradeConfig:  
-    failureThreshold: 1`
+    failureThreshold: 1
+```
 
 **headlessServiceEnabled** tells to create a headless service for Kafka brokers discovery. This is the “old fashion” way, as other Operators or Helm charts do. It’s a `service` without any IP, where the DNS is configured to give you all the names of the pods that are part of the service selector.
 
 Ex with my old cluster :
-`nslookup kf-broker-kafka``Name:      kf-broker-kafka  
+```bash
+nslookup kf-broker-kafka
+
+Name:      kf-broker-kafka  
 Address 1: 10.2.128.124 kf-kafka-1.kf-broker-kafka.alerting.svc.cluster.local  
 Address 2: 10.2.128.254 kf-kafka-0.kf-broker-kafka.alerting.svc.cluster.local  
-Address 3: 10.2.129.225 kf-kafka-2.kf-broker-kafka.alerting.svc.cluster.local`
+Address 3: 10.2.129.225 kf-kafka-2.kf-broker-kafka.alerting.svc.cluster.local
+```
 
 Setting it to False will not create the Headless Service. You don’t usually need it so set it to **False**.
 
 With the Operator, you will end up with two services :
 
-*   &lt;kafka cluster name&gt;-all-broker (kf-kafka-all-broker) : a ClusterIP service which point to all your cluster Instances. You can use it to bootstrap your clients.
-*   &lt;kafka cluster name&gt;-&lt;broker ID&gt; (kf-kafka-0, kf-kafka-1, kf-kafka-2) : one service per Broker. This is used internally by Kafka Brokers to talk to each other, or if you want to give the full list of brokers when bootstrapping.
-![image](/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/3.png#layoutTextWidth)
+*   <kafka cluster name>-all-broker (kf-kafka-all-broker) : a ClusterIP service which point to all your cluster Instances. You can use it to bootstrap your clients.
+*   <kafka cluster name>-<broker ID> (kf-kafka-0, kf-kafka-1, kf-kafka-2) : one service per Broker. This is used internally by Kafka Brokers to talk to each other, or if you want to give the full list of brokers when bootstrapping.
+![image](images/3.png#layoutTextWidth)
 
 
 **oneBrokerPerNode**, when enabled, will put one broker on each node, NOT MORE. Meaning if you have a 2 node cluster and create a 3 broker Kafka cluster, one of the brokers will **NEVER** be scheduled.
@@ -157,63 +177,70 @@ While it’s a good option to set to ensure reliability of the cluster, you may 
 **rollingUpgradeConfig** tels how many brokers can be broken at a time… another way of seeing it is “how many brokers I can rolling upgrade in parallel”. Keep it to **1** for a 3 node cluster, and increase it depending on your broker count and replication factor.
 
 #### brokerConfigGroups
-`brokerConfigGroups:  
-    # Specify desired group name (eg., &#39;default_group&#39;)  
+```yaml
+  brokerConfigGroups:  
+    # Specify desired group name (eg., 'default_group')  
     default_group:  
       # all the brokerConfig settings are available here  
-      serviceAccountName: &#34;kf-kafka&#34;  
+      serviceAccountName: "kf-kafka"  
       imagePullSecrets:  
         - name: docker-images-registry  
-      kafkaJvmPerfOpts: &#34;-server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -Djava.awt.headless=true -Dsun.net.inetaddr.ttl=60 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=${HOSTNAME} -Dcom.sun.management.jmxremote.rmi.port=9099&#34;  
+      kafkaJvmPerfOpts: "-server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -Djava.awt.headless=true -Dsun.net.inetaddr.ttl=60 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=${HOSTNAME} -Dcom.sun.management.jmxremote.rmi.port=9099"  
       storageConfigs:  
-        - mountPath: &#34;/kafka-logs&#34;  
+        - mountPath: "/kafka-logs"  
           pvcSpec:  
             accessModes:  
               - ReadWriteOnce  
             storageClassName: ssd  
             resources:  
               requests:  
-                storage: 30Gi`
+                storage: 30Gi
+```
 
 This is a way to configure some Broker config templates that you will use to create your brokers. The broker config (see later) will have precedence on what is defined here. See it as some defaults so your broker definition is smaller :)
 
 #### Brokers
-`brokers:  
+```yaml
+  brokers:  
     - id:  0  
-      brokerConfigGroup: &#34;default_group&#34;  
+      brokerConfigGroup: "default_group"  
       brokerConfig:  
         resourceRequirements:  
           limits:  
-            memory: &#34;3Gi&#34;  
+            memory: "3Gi"  
           requests:  
-            cpu: &#34;0.3&#34;  
-            memory: &#34;512Mi&#34;  
+            cpu: "0.3"  
+            memory: "512Mi"  
     - id:  1  
-      brokerConfigGroup: &#34;default_group&#34;  
+      brokerConfigGroup: "default_group"  
       brokerConfig:  
         resourceRequirements:  
           limits:  
-            memory: &#34;3Gi&#34;  
+            memory: "3Gi"  
           requests:  
-            cpu: &#34;0.3&#34;  
-            memory: &#34;512Mi&#34;  
+            cpu: "0.3"  
+            memory: "512Mi"  
     - id:  2  
-      brokerConfigGroup: &#34;default_group&#34;  
+      brokerConfigGroup: "default_group"  
       brokerConfig:  
         resourceRequirements:  
           limits:  
-            memory: &#34;3Gi&#34;  
+            memory: "3Gi"  
           requests:  
-            cpu: &#34;0.3&#34;  
-            memory: &#34;512Mi&#34;`
+            cpu: "0.3"  
+            memory: "512Mi"
+```
 
 Thanks to the BrokerConfigGroup, this part is really light.   
 I kept the resources defined in each Broker so I can tune them up… while I see no reasons to have them not being the same for most people…  
-You can see I did NOT set `limits.cpu` parameter… this is due to the `[CFS Quota bug](https://github.com/kubernetes/kubernetes/issues/67577#issuecomment-534866275)`that is not patched on Azure, which will Throttle some of your pods even if they don’t use any CPU…
+You can see I did NOT set `limits.cpu` parameter… this is due to the [CFS Quota bug](https://github.com/kubernetes/kubernetes/issues/67577#issuecomment-534866275) that is not patched on Azure, which will Throttle some of your pods even if they don’t use any CPU…
 
 #### **Config**
-`#clusterWideConfig: |  
-  #  background.threads=2``readOnlyConfig: |  
+```yaml
+#clusterWideConfig: |  
+  #  background.threads=2
+
+readOnlyConfig: |  
   offsets.topic.replication.factor=2  
   default.replication.factor=2  
   transaction.state.log.min.isr=1  
@@ -221,61 +248,68 @@ You can see I did NOT set `limits.cpu` parameter… this is due to the `[CFS Quo
   delete.topic.enable=true  
   num.partitions=32  
   auto.create.topics.enable=false  
-  transaction.state.log.replication.factor=2`
+  transaction.state.log.replication.factor=2
+```
 
 You now have to set your config parameters in different components. This is due to the Rolling Upgrade feature : the operator needs to know between a change in read-only options (which require a node restart) and user options.   
 You can read more here : [https://kafka.apache.org/documentation/#dynamicbrokerconfigs](https://kafka.apache.org/documentation/#dynamicbrokerconfigs)
 
 #### Listeners
-`listenersConfig:  
+```yaml
+listenersConfig:  
     internalListeners:  
-      - type: &#34;plaintext&#34;  
-        name: &#34;plaintext&#34;  
+      - type: "plaintext"  
+        name: "plaintext"  
         containerPort: 9092  
-        usedForInnerBrokerCommunication: true`
+        usedForInnerBrokerCommunication: true
+```
 
 Nothing to tell here… you will have a lot more stuff here if you use SSL…
 
 #### CruiseControl
-`cruiseControlConfig:  
-    image: &#34;solsson/kafka-cruise-control:latest&#34;  
-    serviceAccountName: &#34;kf-kafka&#34;  
+```yaml
+cruiseControlConfig:  
+    image: "solsson/kafka-cruise-control:latest"  
+    serviceAccountName: "kf-kafka"  
     config: |  
 ...  
     capacityConfig: |  
       {  
-        &#34;brokerCapacities&#34;:[  
+        "brokerCapacities":[  
           {  
-            &#34;brokerId&#34;: &#34;-1&#34;,  
-            &#34;capacity&#34;: {  
-              &#34;DISK&#34;: &#34;200000&#34;,  
-              &#34;CPU&#34;: &#34;100&#34;,  
-              &#34;NW_IN&#34;: &#34;50000&#34;,  
-              &#34;NW_OUT&#34;: &#34;50000&#34;  
+            "brokerId": "-1",  
+            "capacity": {  
+              "DISK": "200000",  
+              "CPU": "100",  
+              "NW_IN": "50000",  
+              "NW_OUT": "50000"  
             },  
-            &#34;doc&#34;: &#34;This is the default capacity. Capacity unit used for disk is in MB, cpu is in percentage, network throughput is in KB.&#34;  
+            "doc": "This is the default capacity. Capacity unit used for disk is in MB, cpu is in percentage, network throughput is in KB."  
           }  
         ]  
       }  
     clusterConfigs: |  
       {  
-        &#34;min.insync.replicas&#34;: 2  
-      }`
+        "min.insync.replicas": 2  
+      }
+```
 
 Again, not much difficulties here… Define your own Broker Capacities, specifically the DISK parameter if your cluster use a larger disk than the small default, this will help CC (CruiseControl) to build it’s alarms.
 
 the “…” is a LONG list of options… I kept the defaults for now.
 
 #### Monitoring
-`monitoringConfig:  
+```yaml
+  monitoringConfig:  
     # jmxImage describes the used prometheus jmx exporter agent container  
-    jmxImage: &#34;banzaicloud/jmx-javaagent:0.12.0&#34;  
+    jmxImage: "banzaicloud/jmx-javaagent:0.12.0"  
     # pathToJar describes the path to the jar file in the given image  
-    pathToJar: &#34;/opt/jmx_exporter/jmx_prometheus_javaagent-0.12.0.jar&#34;  
+    pathToJar: "/opt/jmx_exporter/jmx_prometheus_javaagent-0.12.0.jar"  
     # kafkaJMXExporterConfig describes jmx exporter config for Kafka  
     kafkaJMXExporterConfig: |  
       lowercaseOutputName: true  
-      rules:`
+      rules:
+```
 
 This is used to add the needed jars and set up the JMX Exporter for Prometheus. Add your own rules or leave the defaults…
 
@@ -287,7 +321,7 @@ You can see my full config [here](https://gist.github.com/prune998/7976be90e04b9
 
 This is a new addition to this Operator. You can now upload some `kafkatopic` manifests and create / delete topics.
 
-![image](/content/posts/2019-10-01_banzaicloud-kafka-operator-tour/images/4.png#layoutTextWidth)
+![image](images/4.png#layoutTextWidth)
 
 
 As of 0.6.0 / 0.6.1, this feature use a Kubernates Validating Webhook to ensure the manifest is well formated. For that to work, two other pieces have to be installed in your cluster : Cert-Manager and CAInjecter (both from the Cert-Manager project from JetStack).
@@ -297,32 +331,45 @@ Cert-Manager will create an SSL Certificate, and CA-Inject will provide it to th
 #### Cert-Manager
 
 To install it, if you don’t already have it, use the Helm Chart !! If you are using an old version, re-install. Ca-Injector is a new addition and needs to be installed. Check with :
-`kubectl get pods -n cert-manager``NAME                                       READY   STATUS    RESTARTS   AGE  
+```bash
+kubectl get pods -n cert-manager
+
+NAME                                       READY   STATUS    RESTARTS   AGE  
 cert-manager-c76c4dbfd-nvf4v               1/1     Running   0          20h  
-cert-manager-cainjector-55f87f5c76-ndhjv   1/1     Running   0          20h`
+cert-manager-cainjector-55f87f5c76-ndhjv   1/1     Running   0          20h
+```
 
 If you need to install :
-`helm fetch --untar --untardir . jetstack/cert-manager``helm template  
+```bash
+helm fetch --untar --untardir . jetstack/cert-manager
+helm template  
         --name cert-manager  
         --set global.imagePullSecrets[0].name=docker-images-registry  
         --set webhook.enabled=false  
-        --set image.repository=&#34;&lt;private repo&gt;/certmanager&#34;  
-        --set image.tag=&#34;v0.10.1&#34;  
-        --set cainjector.image.repository=&#34;&lt;private repo&gt;/certmanager-cainjector&#34;  
-        --set cainjector.image.tag=&#34;v0.10.1&#34;  
-        --set cainjector.enabled=&#34;true&#34;  
+        --set image.repository="<private repo>/certmanager"  
+        --set image.tag="v0.10.1"  
+        --set cainjector.image.repository="<private repo>/certmanager-cainjector"  
+        --set cainjector.image.tag="v0.10.1"  
+        --set cainjector.enabled="true"  
         --namespace cert-manager  
-        &#39;./cert-manager&#39; &gt; certmanager-generated.yaml``kubectl apply -n cert-manager -f certmanager-generated.yaml`
+        './cert-manager' > certmanager-generated.yaml
+kubectl apply -n cert-manager -f certmanager-generated.yaml
+```
 
 It’s as simple as that. Of course, you may have tons of problems with Helm, as I usually do… I call it “Hellm”… I’m a hater, or, right :)
 
 You can check the Validating Webhook to ensure it was provided with a valid Certificate :
-`kubectl get validatingwebhookconfiguration kafka-operator-validating-webhook -o jsonpath=&#34;{[&#39;webhooks&#39;][0][&#39;clientConfig&#39;][&#39;caBundle&#39;]}&#34;``LS0tLS1VeryLongStringWithBase64BitOfTheSSLCertificateWhichIRemovedSoItWontMakeThisArticleEvenHardToReadLS0tCg==`
+```bash
+kubectl get validatingwebhookconfiguration kafka-operator-validating-webhook -o jsonpath="{['webhooks'][0]['clientConfig']['caBundle']}"
+
+LS0tLS1VeryLongStringWithBase64BitOfTheSSLCertificateWhichIRemovedSoItWontMakeThisArticleEvenHardToReadLS0tCg==
+```
 
 #### KafkaTopic
 
 The final part in the Cluster creations, the topic(s) !
-`---  
+```yaml
+---  
 apiVersion: kafka.banzaicloud.io/v1alpha1  
 kind: KafkaTopic  
 metadata:  
@@ -335,10 +382,10 @@ spec:
   partitions: 8  
   replicationFactor: 2  
   config:  
-    segment.bytes: &#34;104857600&#34;  
-    delete.retention.ms: &#34;8640000&#34;  
-    retention.ms: &#34;259200000&#34;  
-    cleanup.policy: &#34;compact&#34;  
+    segment.bytes: "104857600"  
+    delete.retention.ms: "8640000"  
+    retention.ms: "259200000"  
+    cleanup.policy: "compact"  
 ---  
 apiVersion: kafka.banzaicloud.io/v1alpha1  
 kind: KafkaTopic  
@@ -352,9 +399,10 @@ spec:
   partitions: 128  
   replicationFactor: 2  
   config:  
-    segment.bytes: &#34;104857600&#34;  
-    delete.retention.ms: &#34;864000&#34;  
-    retention.ms: &#34;259200000&#34;`
+    segment.bytes: "104857600"  
+    delete.retention.ms: "864000"  
+    retention.ms: "259200000"
+```
 
 What you see here is the YAML for 2 topics, one compacted, the other one regular. Topics will be created in the cluster `kf-kafka`.
 

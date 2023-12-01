@@ -8,19 +8,20 @@ description: ""
 
 subtitle: "With Istio Telemetry V2, the way the metrics are processed changed. Here is how I configure Prometheus-Operator to scrape them."
 
-image: "/posts/2020-08-07_prometheusoperator-and-istio-telemetry-v2/images/1.jpeg" 
+image: "images/1.jpeg" 
 images:
- - "/posts/2020-08-07_prometheusoperator-and-istio-telemetry-v2/images/1.jpeg"
- - "/posts/2020-08-07_prometheusoperator-and-istio-telemetry-v2/images/2.png"
- - "/posts/2020-08-07_prometheusoperator-and-istio-telemetry-v2/images/3.png"
+ - "images/1.jpeg"
+ - "images/2.png"
+ - "images/3.png"
 
+tags: ["devops", "gitops", "kubernetes", "observability", "servicemesh"]
 
 aliases:
     - "/prometheus-operator-and-istio-telemetry-v2-8be5e073272"
 
 ---
 
-![image](/posts/2020-08-07_prometheusoperator-and-istio-telemetry-v2/images/1.jpeg#layoutTextWidth)
+![image](images/1.jpeg#layoutTextWidth)
 
 
 Starting Istio 1.4 and up, the way the Observability metrics are created, exchanged and scraped changed. Here is how I configure Prometheus-Operator resources to scrape metrics from Istio 1.6 and install latest Grafana Dashboards
@@ -64,9 +65,14 @@ If you know a bit of Prometheus, this is pretty easy to read:
 
 The only thing to be careful about are the `labels` at the beginning: they are _selectors_ that MUST match the Prometheus install `serviceMonitorSelector`. If you fail to do so, Prometheus will not consider this resource.  
 You can check how yours is configured by looking at the `prometheus` resource:
-`kubectl get prometheus  -o yaml | grep -A4 serviceMonitorSelector``    serviceMonitorSelector:  
+
+```bash
+kubectl get prometheus  -o yaml | grep -A4 serviceMonitorSelector
+
+    serviceMonitorSelector:  
       matchLabels:  
-        release: prometheus`
+        release: prometheus
+```
 
 In my case, it is `release: prometheus`
 
@@ -98,9 +104,9 @@ spec:
     relabelings:  
     - sourceLabels: [__meta_kubernetes_pod_container_port_name]  
       action: keep  
-      regex: &#39;.*-envoy-prom&#39;  
+      regex: '.*-envoy-prom'  
     - action: labelmap  
-      regex: &#34;__meta_kubernetes_pod_label_(.+)&#34;  
+      regex: "__meta_kubernetes_pod_label_(.+)"  
     - sourceLabels: [__meta_kubernetes_namespace]  
       action: replace  
       targetLabel: namespace  
@@ -117,7 +123,7 @@ Add a label `istio-prometheus-ignore=”true”` to your deployments in case you
 
 After few seconds for the whole thing to settle, you can connect to your Prom frontend, using Port-Forward on port **9090** or using the Istio Ingress-Gateway that you configured with SSL cert using SDS (check my older posts).
 
-![image](/posts/2020-08-07_prometheusoperator-and-istio-telemetry-v2/images/2.png#layoutTextWidth)
+![image](images/2.png#layoutTextWidth)
 
 
 ### Grafana Dashboards
@@ -129,26 +135,28 @@ Glad you read so far. I know this blog is missing some pictures and colors… bu
 Istio Dashboards for Grafana are stored in many places. You can find the latest in the [Istio Github repo](https://github.com/istio/istio/tree/master/operator/cmd/mesh/testdata/manifest-generate/data-snapshot/addons/dashboards), but the best solution for you is to grab the one that matches your Istio install from the Istio install zip (or tar) where you grabbed `istioctl` !
 
 From Istio docs, get it with:
-`curl -L [https://istio.io/downloadIstio](https://istio.io/downloadIstio) | sh -`
+```bash
+curl -L [https://istio.io/downloadIstio](https://istio.io/downloadIstio) | sh -
+```
 
 This will create a folder with all the Istio stuffs. Note that **Addons** (Grafana, Kiali, Prometheus..) will **NOT** be managed by `istioctl` quite soon. You can find all the deployment scripts in this folder.
 
 Dashboards are also located in this folder (`istio-1.6.7` as the time of this writing) at `manifests/charts/istio-telemetry/grafana/dashboards/`
 
-For them to be used by Grafana (the one installed by Prom Operator), you need to copy them inside a secret. Here’s the script I use for that (do a `cd istio-&lt;your-version&gt;`before using it:
+For them to be used by Grafana (the one installed by Prom Operator), you need to copy them inside a secret. Here’s the script I use for that (do a `cd istio-<your-version>`before using it:
 
-```
+```bash
 #!/bin/bash
 # go into the dashboards folder  
 pushd manifests/charts/istio-telemetry/grafana/dashboards
 
 # create the basic command to create the configmap  
-ISTIO_DASHBOARD_SECRET=&#34;kubectl -n monitoring create cm prometheus-oper-istio-dashboards &#34;
+ISTIO_DASHBOARD_SECRET="kubectl -n monitoring create cm prometheus-oper-istio-dashboards "
 
 # append each file to the secret  
 for i in *.json ; do  
   echo $i  
-  ISTIO_DASHBOARD_SECRET=&#34;${ISTIO_DASHBOARD_SECRET} --from-file=${i}=${i}&#34;  
+  ISTIO_DASHBOARD_SECRET="${ISTIO_DASHBOARD_SECRET} --from-file=${i}=${i}"  
 done
 
 # run the secret creation command  
@@ -162,4 +170,4 @@ popd
 
 Restart the Grafana pod and you should see the Dashboards in Grafana:
 
-![image](/posts/2020-08-07_prometheusoperator-and-istio-telemetry-v2/images/3.png#layoutTextWidth)
+![image](images/3.png#layoutTextWidth)

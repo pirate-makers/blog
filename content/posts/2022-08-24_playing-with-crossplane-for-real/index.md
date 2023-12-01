@@ -8,24 +8,25 @@ description: ""
 
 subtitle: "It’s 2022 ! We all know about the necessity of creating your Infra AS CODE. I guess we can all agree that Terraform (TF) is the leader in…"
 
-image: "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/1.png" 
+image: "images/1.png" 
 images:
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/1.png"
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/2.png"
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/3.png"
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/4.png"
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/5.png"
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/6.png"
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/7.png"
- - "/content/posts/2022-08-24_playing-with-crossplane-for-real/images/8.png"
+ - "images/1.png"
+ - "images/2.png"
+ - "images/3.png"
+ - "images/4.png"
+ - "images/5.png"
+ - "images/6.png"
+ - "images/7.png"
+ - "images/8.png"
 
+tags: ["devops", "gitops", "kubernetes"]
 
 aliases:
     - "/playing-with-crossplane-for-real-f591e66065ae"
 
 ---
 
-![image](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/1.png#layoutTextWidth)
+![image](images/1.png#layoutTextWidth)
 
 
 It’s 2022 ! We all know about the necessity of creating your Infra AS CODE. I guess we can all agree that [Terraform (TF)](https://www.hashicorp.com/products/terraform) is the leader in this field.
@@ -66,21 +67,21 @@ But the strength of Crossplane lies in its `Composition` feature. It is exactly 
 
 Let’s grab some pictures from the official docs:
 
-![https://crossplane.github.io/docs/v1.9/concepts/composition.html#overview](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/2.png#layoutTextWidth)
+![https://crossplane.github.io/docs/v1.9/concepts/composition.html#overview](images/2.png#layoutTextWidth)
 
 
 You `claim` a Postresql Instance, that references a `Composite Resource` that will trigger the creation of a `CloudSQL Instance` and a `Firewall Rule` to access it. Neat !
 
 It’s a little bit more complicated, so here’s another picture from the doc that is supposed to be closer to reality:
 
-![https://crossplane.github.io/docs/v1.9/concepts/composition.html#how-it-works](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/3.png#layoutTextWidth)
+![https://crossplane.github.io/docs/v1.9/concepts/composition.html#how-it-works](images/3.png#layoutTextWidth)
 
 
 AH ! There we go !
 
 You can go read the docs at [https://crossplane.github.io/docs/v1.9/concepts/composition.html](https://crossplane.github.io/docs/v1.9/concepts/composition.html#overview). I personally read that again and again, and wasn’t able to fully understand the real thing until I played with it, and built my own schema:
 
-![image](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/4.png#layoutTextWidth)
+![image](images/4.png#layoutTextWidth)
 
 
 Let me break things down:
@@ -90,7 +91,7 @@ Let me break things down:
 3.  **Infra**: Create a CompositeResourceDefinition (XRD) which creates an interface with a limited set of parameters to tweak
 4.  Crossplane will create and maintain two new CRDs based on the XRD: a Claim and a CompositeResource (XR) (green boxes). Crossplane will start watching and reconciling CR based on those CRDs
 5.  **Infra**: Create a Composition, which will reference a source XRD and a list of Resources to created (from the CRDs created by the Provider). It’s a sort of templating resources with values from the interface (the XRD)
-6.  **Dev**: Claim a resource (purple box) -&gt; a Claim is actually a CustomResource of a type maintained by Crossplane
+6.  **Dev**: Claim a resource (purple box) -> a Claim is actually a CustomResource of a type maintained by Crossplane
 7.  Crossplane will create a CompositeResource (XR) based on the Claim
 8.  Crossplane will create CustomResources (CR) which are instances of the Provider’s resources, based on the content of the CompositeResource (XR) (red boxes)
 9.  Provider will reconcile the resources he manages, and call GCP API (in case of the GCP provider) to create the resources declared in the CR
@@ -99,9 +100,9 @@ This is really powerful, and the only limitation is actually in what a provider 
 
 Talking of which, I guess you see me coming, it’s also the biggest problem Crossplane has: it all depends on what a Provider can do !Oh, by the way, I’ll be a speaker at [KubeCon North America 2022 in Detroit](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/) , please [check my talk here](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/program/schedule/), register for Thursday, October 27 • 2:30pm — 4:00pm:
 
-[Tutorial: Set Up Your Shell For Kubernetes Productivity And Be Efficient Quickly — Sebastien “Prune” Thomas, Wunderkind &amp; Archy Ayrat Khayretdinov, Google](https://kccncna2022.sched.com/event/182F7/tutorial-set-up-your-shell-for-kubernetes-productivity-and-be-efficient-quickly-sebastien-prune-thomas-wunderkind-archy-ayrat-khayretdinov-google)
+[Tutorial: Set Up Your Shell For Kubernetes Productivity And Be Efficient Quickly — Sebastien “Prune” Thomas, Wunderkind & Archy Ayrat Khayretdinov, Google](https://kccncna2022.sched.com/event/182F7/tutorial-set-up-your-shell-for-kubernetes-productivity-and-be-efficient-quickly-sebastien-prune-thomas-wunderkind-archy-ayrat-khayretdinov-google)
 
-![image](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/5.png#layoutTextWidth)
+![image](images/5.png#layoutTextWidth)
 ### Question 1: Providers
 
 As stated, `Providers` are the part that manages some resources. In fact, it’s a `Pod` that will be deployed along Crossplane, will create CRD for the resource it manages and watch on them. Each instance of a managed resource will make the `Provider` create and maintain a resource. For the GCP provider, that means calling the GCP API and create some resources.
@@ -115,7 +116,7 @@ Ex:
 
 Let’s dive in the GCP provider:
 
-![image](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/6.png#layoutTextWidth)
+![image](images/6.png#layoutTextWidth)
 
 
 28 CRDs discovered ? wait, what ? only 28 different GCP resources are managed by Crossplane ?
@@ -124,7 +125,7 @@ short answer: YES :(
 
 So, for example, you can create a `CloudSQLInstance` which represents a Postgres or MySQL Database Instance:
 
-![image](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/7.png#layoutTextWidth)
+![image](images/7.png#layoutTextWidth)
 
 
 But then, you just can’t create any specific DB, User or anything else related to this DB Instance. Because, well, the resources were not ported into the Provider.
@@ -144,7 +145,7 @@ TerraJet (Jet) is a way to convert Terraform Providers into Crossplane Providers
 
 Well, the GCP Jet Provider counts 438 resources, including all that we need to manage SQL DBs in GCP. AWS Jet Provider counts a wooping 780 resources ! I guess it’s more than you’ll ever use.
 
-![image](/content/posts/2022-08-24_playing-with-crossplane-for-real/images/8.png#layoutTextWidth)
+![image](images/8.png#layoutTextWidth)
 
 
 ### Question 2: Docs ?
@@ -176,7 +177,8 @@ Note that this is a really limited need so far. Only 3 resourceTypes are at play
 #### XRD
 
 I started creating a XRD:
-`apiVersion: apiextensions.crossplane.io/v1  
+``` yaml
+apiVersion: apiextensions.crossplane.io/v1  
 kind: CompositeResourceDefinition  
 metadata:  
   name: xjetpostgresqls.database.wk  
@@ -220,12 +222,14 @@ spec:
                   - dbName  
                   - instanceSize  
             required:  
-              - parameters`
+              - parameters
+```
 
 Here I can already see different problems. I wanted to create a DB, and a DB user with the same name, but what if I want 2 DBs ? 3 DBs? 2 users per DB ?
 
 I guess I have to re-write the schema to use something like:
-`properties:  
+``` yaml
+properties:  
   dbs:  
     type: array  
     items:  
@@ -239,14 +243,16 @@ I guess I have to re-write the schema to use something like:
           items:  
              properties:  
                name:  
-                 type: string`
+                 type: string
+```
 
 Whatever, modelling those is not straightforward… but, well, it’s a one time effort. Totally worth it. Take your time building this, as it defines the parameters that your Dev team will use to create resources. Whatever is not defined here will use the defaults from the composition or the Provider. You’re creating your abstraction.
 
 #### Compositions
 
 Now we can create the Composition, which will take the values defined by the XRD and apply them to the Cloud Resources we need.
-`apiVersion: apiextensions.crossplane.io/v1  
+``` yaml
+apiVersion: apiextensions.crossplane.io/v1  
 kind: Composition  
 metadata:  
   name: jetpostgresql.gcp.database.wk  
@@ -266,7 +272,7 @@ spec:
         kind: DatabaseInstance  
         metadata:  
           annotations:   
-            crossplane.io/external-name: &#34;crossplanesqlinstance&#34;  
+            crossplane.io/external-name: "crossplanesqlinstance"  
         spec:  
           providerConfigRef:  
             name: crossplane-provider-jet-gcp  
@@ -282,7 +288,7 @@ spec:
               ipConfiguration:  
                 - ipv4Enabled: true  
                   authorizedNetworks:  
-                    - value: &#34;0.0.0.0/0&#34;  
+                    - value: "0.0.0.0/0"  
             userLabels:  
               creator: crossplane  
               owner: prune  
@@ -291,27 +297,27 @@ spec:
             name: cloudsqlinstance  
       patches:  
         # set diskSize based on the Claim  
-        - fromFieldPath: &#34;spec.parameters.storageGB&#34;  
-          toFieldPath: &#34;spec.forProvider.settings[0].diskSize&#34;  
+        - fromFieldPath: "spec.parameters.storageGB"  
+          toFieldPath: "spec.forProvider.settings[0].diskSize"  
         # set the secret name to the claim name  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-          toFieldPath: &#34;spec.writeConnectionSecretToRef.name&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"  
+          toFieldPath: "spec.writeConnectionSecretToRef.name"  
           transforms:  
             - type: string  
               string:  
-                fmt: &#34;%s-pginstance&#34;  
+                fmt: "%s-pginstance"  
         # change secret namespace to the one of the claim  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-namespace]&#34;  
-          toFieldPath: &#34;spec.writeConnectionSecretToRef.namespace&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-namespace]"  
+          toFieldPath: "spec.writeConnectionSecretToRef.namespace"  
         # set label app = name of the original claim  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-          toFieldPath: &#34;metadata.labels[crossplane.io/app]&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"  
+          toFieldPath: "metadata.labels[crossplane.io/app]"  
         # set the name of the external resource to be the name of the claim  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-          toFieldPath: &#34;metadata.annotations[crossplane.io/external-name]&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"  
+          toFieldPath: "metadata.annotations[crossplane.io/external-name]"  
         # set instance size to the one defined in the claim  
-        - fromFieldPath: &#34;spec.parameters.instanceSize&#34;  
-          toFieldPath: &#34;spec.forProvider.settings[0].tier&#34;  
+        - fromFieldPath: "spec.parameters.instanceSize"  
+          toFieldPath: "spec.forProvider.settings[0].tier"  
           transforms:  
             - type: map  
               map:  
@@ -326,7 +332,7 @@ spec:
         kind: Database  
         metadata:  
           annotations:   
-            crossplane.io/external-name: &#34;crossplanesqldb&#34;  
+            crossplane.io/external-name: "crossplanesqldb"  
         spec:  
           providerConfigRef:  
             name: crossplane-provider-jet-gcp  
@@ -339,21 +345,21 @@ spec:
             name: cloudsqldb  
       patches:  
         # set the secret name to the claim name  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-          toFieldPath: &#34;spec.writeConnectionSecretToRef.name&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"  
+          toFieldPath: "spec.writeConnectionSecretToRef.name"  
           transforms:  
             - type: string  
               string:  
-                fmt: &#34;%s-pgdb&#34;  
+                fmt: "%s-pgdb"  
         # change secret namespace to the one of the claim  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-namespace]&#34;  
-          toFieldPath: &#34;spec.writeConnectionSecretToRef.namespace&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-namespace]"  
+          toFieldPath: "spec.writeConnectionSecretToRef.namespace"  
         # set the name of the DB resource to be the name defined in the claim  
-        - fromFieldPath: &#34;spec.parameters.dbName&#34;  
-          toFieldPath: &#34;metadata.annotations[crossplane.io/external-name]&#34;  
+        - fromFieldPath: "spec.parameters.dbName"  
+          toFieldPath: "metadata.annotations[crossplane.io/external-name]"  
         # set app Label  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-          toFieldPath: &#34;metadata.labels[crossplane.io/app]&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"  
+          toFieldPath: "metadata.labels[crossplane.io/app]"  
     - name: cloudsqldbuser  
       base:  
         apiVersion: sql.gcp.jet.crossplane.io/v1alpha2  
@@ -361,7 +367,7 @@ spec:
         metadata:  
           annotations:   
             # set the name of the DB User, this is hardcoded for demo but should come from the CRD  
-            crossplane.io/external-name: &#34;existing-sa-for-db@my-project.iam&#34;  
+            crossplane.io/external-name: "existing-sa-for-db@my-project.iam"  
         spec:  
           providerConfigRef:  
             name: crossplane-provider-jet-gcp  
@@ -375,21 +381,22 @@ spec:
             name: cloudsqluser  
       patches:  
         # set the secret name to the claim name  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-          toFieldPath: &#34;spec.writeConnectionSecretToRef.name&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"  
+          toFieldPath: "spec.writeConnectionSecretToRef.name"  
           transforms:  
             - type: string  
               string:  
-                fmt: &#34;%s-pguser&#34;  
+                fmt: "%s-pguser"  
         # change secret namespace to the one of the claim  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-namespace]&#34;  
-          toFieldPath: &#34;spec.writeConnectionSecretToRef.namespace&#34;  
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-namespace]"  
+          toFieldPath: "spec.writeConnectionSecretToRef.namespace"  
         # set the name of the DB User, this is hardcoded for demo but should come from the Claim CRD  
-        # - fromFieldPath: &#34;spec.parameters.dbName&#34;  
-        #   toFieldPath: &#34;metadata.annotations[crossplane.io/external-name]&#34;  
+        # - fromFieldPath: "spec.parameters.dbName"  
+        #   toFieldPath: "metadata.annotations[crossplane.io/external-name]"  
         # set app Label  
-        - fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-          toFieldPath: &#34;metadata.labels[crossplane.io/app]&#34;`
+        - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"  
+          toFieldPath: "metadata.labels[crossplane.io/app]"
+```
 
 Here you can see that it’s not trivial either. A lot is going on here. Globally, you just list all the Provider’s Resources you want to instanciate, give default parameters you want to enforce, and patch some others from user-supplied values or other resources values.
 
@@ -409,7 +416,8 @@ It’s meant to be created by your developers that will want a DB along their ap
 It is the only resource that is _namespaced_. This is made so you can define RBACs and allow this team (this namespace) to hold DBs, but no Pub/Sub, for example.
 
 Here’s mine:
-`apiVersion: database.wk/v1alpha1  
+``` yaml
+apiVersion: database.wk/v1alpha1  
 kind: JetPostgreSQL  
 metadata:  
   namespace: test-namespace  
@@ -420,21 +428,24 @@ spec:
     dbName: xrdb  
     instanceSize: small # small, medium, large  
   writeConnectionSecretToRef:  
-    name: jet-db-claim-details`
+    name: jet-db-claim-details
+```
 
 Neat ! Simple ! Thanks abstractions ! Devs only specify what they care about, and you take care of all the boring stuff !
 
 Going back to Secrets, you see that I also defined which secret to write stuff into… but it seems this value is not an override of what is in the `Composition`. So I patched the composition to actually create the secret with a name derived from the `Claim` name and in the same `Namespace` as the `Claim` :
-`# set the secret name to reference the claim name  
-- fromFieldPath: &#34;metadata.labels[crossplane.io/claim-name]&#34;  
-  toFieldPath: &#34;spec.writeConnectionSecretToRef.name&#34;  
-  transforms:  
-    - type: string  
-      string:  
-        fmt: &#34;%s-pginstance&#34;  
-# change secret namespace to the one of the claim  
-- fromFieldPath: &#34;metadata.labels[crossplane.io/claim-namespace]&#34;  
-  toFieldPath: &#34;spec.writeConnectionSecretToRef.namespace&#34;`
+``` yaml
+# set the secret name to reference the claim name
+- fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+  toFieldPath: "spec.writeConnectionSecretToRef.name"
+  transforms:
+    - type: string
+      string:
+        fmt: "%s-pginstance"
+# change secret namespace to the one of the claim
+- fromFieldPath: "metadata.labels[crossplane.io/claim-namespace]"
+  toFieldPath: "spec.writeConnectionSecretToRef.namespace"
+```
 
 I first tried to use `metadata.name` to get the claim name, but, in fact, the `Composition` is not templated from the `Claim` but from the intermediate `XR` that is created from the `Claim` . Refer to my schema above if needed. So, in the `XR` the only way to get back to the `Claim` metadata is by looking at some specific `labels` like `crossplane.io/claim-name`.
 

@@ -8,18 +8,19 @@ description: ""
 
 subtitle: "Recap"
 
-image: "/posts/2018-11-07_istio-1.0.2-envoy-certmanager-lets-encrypt-for-tls-certificate-merge/images/1.jpeg" 
+image: "images/1.jpeg" 
 images:
- - "/posts/2018-11-07_istio-1.0.2-envoy-certmanager-lets-encrypt-for-tls-certificate-merge/images/1.jpeg"
- - "/posts/2018-11-07_istio-1.0.2-envoy-certmanager-lets-encrypt-for-tls-certificate-merge/images/2.png"
+ - "images/1.jpeg"
+ - "images/2.png"
 
+tags: ["devops", "servicemesh", "kubernetes", "dev", "golang"]
 
 aliases:
     - "/istio-1-0-2-envoy-cert-manager-lets-encrypt-for-tls-certificate-merge-7a774bff66c2"
 
 ---
 
-![image](/posts/2018-11-07_istio-1.0.2-envoy-certmanager-lets-encrypt-for-tls-certificate-merge/images/1.jpeg#layoutTextWidth)
+![image](images/1.jpeg#layoutTextWidth)
 
 
 ### Recap
@@ -60,7 +61,7 @@ The idea is simple : as Istio can only read _ONE Secret_ to fetch _Certificates_
 
 So, how does this work ? Let’s find out…
 
-![image](/posts/2018-11-07_istio-1.0.2-envoy-certmanager-lets-encrypt-for-tls-certificate-merge/images/2.png#layoutTextWidth)
+![image](images/2.png#layoutTextWidth)
 
 
 1.  The user push Manifests to create some _Certificates_
@@ -123,11 +124,13 @@ From my point of view I would have loved a little more examples and docs.
 I won’t go through the Operator SDK Cli setup, just follow the [Quick Start](https://github.com/operator-framework/operator-sdk#quick-start) of the [Blog Post](https://coreos.com/blog/introducing-operator-framework). I’m just going to explain some of my code.
 
 Once you have the CLI setup you can start creating your Operator. As you’ll see in the QuickStart, you need to create a new Operator, add an API (your Custom Resource) and add a Controler. This is all done using the CLI and will provide a default implementation :
-`operator-sdk new certmerge-operator  
+```bash
+operator-sdk new certmerge-operator  
 cd certmerge-operator  
 operator-sdk add api --api-version=certmerge.lecentre.net/v1alpha1 --kind=CertMerge  
 operator-sdk add controller --api-version=certmerge.lecentre.net/v1alpha1 --kind=CertMerge  
-operator-sdk generate k8s`
+operator-sdk generate k8s
+```
 
 The last command, `operator-sdk generate k8s` will generate the needed code from your Custom Resouce Definition so you will have to run it every time you change something.
 
@@ -136,119 +139,151 @@ The last command, `operator-sdk generate k8s` will generate the needed code from
 In my case the Custom Resouce is of `Type: CertMerge` and is defined in `pkg/apis/certmerge/v1alpha1/certmerge_types.go` .
 
 It must include all the needed fields your Operator will need to do it’s job. You also need a `List` type of your Resource. Here’s my CR :
-`// CertMerge is the Schema for the certmerges API  
+```go
+// CertMerge is the Schema for the certmerges API  
 type CertMerge struct {  
-  metav1.TypeMeta   `json:&#34;,inline&#34;`  
-  metav1.ObjectMeta `json:&#34;metadata,omitempty&#34;```  Spec   CertMergeSpec   `json:&#34;spec,omitempty&#34;`  
-  Status CertMergeStatus `json:&#34;status,omitempty&#34;`  
-}``// CertMergeList contains a list of CertMerge  
+  metav1.TypeMeta   `json:",inline"`  
+  metav1.ObjectMeta `json:"metadata,omitempty"```  Spec   CertMergeSpec   `json:"spec,omitempty"`  
+  Status CertMergeStatus `json:"status,omitempty"`  
+}
+// CertMergeList contains a list of CertMerge  
 type CertMergeList struct {  
-  metav1.TypeMeta `json:&#34;,inline&#34;`  
-  metav1.ListMeta `json:&#34;metadata,omitempty&#34;```  Items           []CertMerge `json:&#34;items&#34;`  
-}`
+  metav1.TypeMeta `json:",inline"`  
+  metav1.ListMeta `json:"metadata,omitempty"```  Items           []CertMerge `json:"items"`  
+}
+```
 
 Most important here are that my CR contains a `Spec`, holding the details of my CR, and a `Status`, holding the fields that my Operator can use to re-concile the CR. I haven’t add stuff to the Status part of the Operator right now.
 
 The `Spec` is defined as :
-`// CertMergeSpec defines the desired state of CertMerge``type CertMergeSpec struct {  
-  SecretName      string             `json:&#34;name&#34;`  
-  SecretNamespace string             `json:&#34;namespace&#34;`  
-  Selector        []SecretSelector   `json:&#34;selector&#34;`  
-  SecretList      []SecretDefinition `json:&#34;secretlist&#34;`  
-}``// SecretSelector defines the needed parameters to search for secrets by Label  
+```go
+// CertMergeSpec defines the desired state of CertMerge``type CertMergeSpec struct {  
+  SecretName      string             `json:"name"`  
+  SecretNamespace string             `json:"namespace"`  
+  Selector        []SecretSelector   `json:"selector"`  
+  SecretList      []SecretDefinition `json:"secretlist"`  
+}
+// SecretSelector defines the needed parameters to search for secrets by Label  
 type SecretSelector struct {  
-  LabelSelector metav1.LabelSelector `json:&#34;labelselector&#34;`  
-  Namespace     string               `json:&#34;namespace&#34;`  
-}``// SecretDefinition defines the parameters to search for secrets by name  
+  LabelSelector metav1.LabelSelector `json:"labelselector"`  
+  Namespace     string               `json:"namespace"`  
+}
+// SecretDefinition defines the parameters to search for secrets by name  
 type SecretDefinition struct {  
-  Name      string `json:&#34;name&#34;`  
-  Namespace string `json:&#34;namespace&#34;`  
-}`
+  Name      string `json:"name"`  
+  Namespace string `json:"namespace"`  
+}
+```
 
 To define a Merge we need to give it a Name and a Namespace, a list of Secrets to add (SecretList) and a list of Labels to search for (we will include all the certs that match the Labels).
 
 #### The Main
 
 There’s not much in the main. I decided to use [Logrus](https://github.com/Sirupsen/logrus) as logger but there are active discussions to change it to [Glog](https://github.com/golang/glog) and Zap (but my friend and co-worker Akh is strongly discouraging me to go with Glog) . I added an option to change the Log Level :
-`var (  
-  logLevel       = flag.String(&#34;loglevel&#34;, log.WarnLevel.String(), &#34;the log level to display&#34;)  
-  displayVersion = flag.Bool(&#34;version&#34;, false, &#34;Show version and quit&#34;)  
-)``func main() {  
-  flag.Parse()``  // set logs in json format  
+```go
+var (  
+  logLevel       = flag.String("loglevel", log.WarnLevel.String(), "the log level to display")  
+  displayVersion = flag.Bool("version", false, "Show version and quit")  
+)
+func main() {  
+  flag.Parse()
+  // set logs in json format  
   myLogLevel, err := log.ParseLevel(*logLevel)  
   if err != nil {  
     myLogLevel = log.WarnLevel  
   }  
   log.SetLevel(myLogLevel)  
-  log.SetFormatter(&amp;log.JSONFormatter{}`
+  log.SetFormatter(&log.JSONFormatter{}
+```
 
 Then you create a Manager which holds all the SDK components :
-`mgr, err := manager.New(cfg, manager.Options{Namespace: &#34;&#34;})`
+```go
+mgr, err := manager.New(cfg, manager.Options{Namespace: ""})
+```
 
 Using an empty Namespace make the Operator watch ALL Namespaces. You will have to update the RBAC rules for your Operator to allow for this. I’ve changed the Roles/RoleBindings to ClusterRoles/ClusterRoleBindings.
 
 You finally add all APIs and Controlers. These lines will load ALL the files located in the `pkg/apis` and `pkg/controller` to the Manager :
-`// Setup Scheme for all resources  
+```go
+// Setup Scheme for all resources  
 if err := apis.AddToScheme(mgr.GetScheme()); err != nil {  
   log.Fatal(err)  
-}``// Setup all Controllers  
+}
+// Setup all Controllers  
 if err := controller.AddToManager(mgr); err != nil {  
   log.Fatal(err)  
-}`
+}
+```
 
 #### The Watch
 
 The Operator watch for some Resources change to trigger a Reconcile. This is done in the `Controler`. It’s located in the file `pkg/controller/certmerge/certmerge_controller.go`
 
 The `Add` function is called when we add the Controlers. This function indeed create the Controler and all the Watched. Obviously you want to watch your own Custom Resource (I will use CR now on) :
-`func add(mgr manager.Manager, r reconcile.Reconciler, mapFn handler.ToRequestsFunc) error {``  // Create a new controller  
-  c, err := controller.New(&#34;certmerge-controller&#34;, mgr, controller.Options{Reconciler: r})  
+```go
+func add(mgr manager.Manager, r reconcile.Reconciler, mapFn handler.ToRequestsFunc) error {
+  // Create a new controller  
+  c, err := controller.New("certmerge-controller", mgr, controller.Options{Reconciler: r})  
   if err != nil {  
     return err  
-  }``  // Watch for changes to primary resource CertMerge  
-  err = c.Watch(&amp;source.Kind{Type: &amp;certmergev1alpha1.CertMerge{}}, &amp;handler.EnqueueRequestForObject{})  
+  }
+  // Watch for changes to primary resource CertMerge  
+  err = c.Watch(&source.Kind{Type: &certmergev1alpha1.CertMerge{}}, &handler.EnqueueRequestForObject{})  
   if err != nil {  
     return err  
-  }`
+  }
+```
 
 If you’re building your own Operator from scratch, your `add` func is going to take only 2 parameters. The last one, `mapFn handler.ToRequestsFunc` is a function that will be called by some `Watch` instead of the default `Reconcile` function. I’ll get to it soon.
 
 In this Operator, we watch for `CertMerge` CR and we create/update `Secrets`. The SDK have a cool way to link the `Secrets` we create. This allows us, for example, to automatically remove the `Secret` when the `CertMerge` is removed.
 
 To do that we create a new `Watch` with a handler of `EnqueueRequestForOwner` instead of a `EnqueueRequestForObject` :
-`// This will trigger the Reconcile if the Merged Secret is modified``err = c.Watch(&amp;source.Kind{Type: &amp;corev1.Secret{}}, &amp;handler.EnqueueRequestForOwner{  
+```go
+// This will trigger the Reconcile if the Merged Secret is modified
+err = c.Watch(&source.Kind{Type: &corev1.Secret{}}, &handler.EnqueueRequestForOwner{  
   IsController: true,  
-  OwnerType:    &amp;certmergev1alpha1.CertMerge{},  
-})`
+  OwnerType:    &certmergev1alpha1.CertMerge{},  
+})
+```
 
 So now, the Reconcile will be triggered if there is an event regarding a `CertMerge` resource of a `Secret` resource that is managed by our Operator.
 
 When Cert-Manager renew a Certificate it will update the target Secret. This event also need to be watched by our Operator. This is done using another kind of `Watch` : the `EnqueueRequestsFromMapFunc`
-`// Watch for Secret change and process them through the SecretTriggerCertMerge function``// This watch enables us to reconcile a CertMerge when a concerned Secret is changed (create/update/delete)``err = c.Watch(  
-  &amp;source.Kind{Type: &amp;corev1.Secret{}},  
-  &amp;handler.EnqueueRequestsFromMapFunc{  
+```go
+// Watch for Secret change and process them through the SecretTriggerCertMerge function
+// This watch enables us to reconcile a CertMerge when a concerned Secret is changed (create/update/delete)
+err = c.Watch(  
+  &source.Kind{Type: &corev1.Secret{}},  
+  &handler.EnqueueRequestsFromMapFunc{  
     ToRequests: mapFn,  
   },  
   p,  
-)`
+)
+```
 
 We’re saying here that we will run the `mapFn` function when a `Secret` event is triggered.
 
 We also use `p`, a `Predicate`. Predicates are used to filter `Events`. The `Predicate` function will return `true` if the event have to be passed to the `mapFn` function or `false` to drop the event.
 
 For example, the `Delete` events are dropped :
-`DeleteFunc: func(e event.DeleteEvent) bool {  
+```go
+DeleteFunc: func(e event.DeleteEvent) bool {  
   return false  
-},`
+},
+```
 
 We drop `Delete` events as, when deleting an object, the K8s API first create an`Update event` with some `Delete Metadata` then create a `Delete event`.
 
 In case of an `Update` event, we don’t want to trigger a `Reconcile` if the Secret’s data is not changed :
-`// if old and new data is the same, don&#39;t reconcile  
+```go
+// if old and new data is the same, don't reconcile  
 newObj := e.ObjectNew.DeepCopyObject().(*corev1.Secret)  
-oldObj := e.ObjectOld.DeepCopyObject().(*corev1.Secret)``if cmp.Equal(newObj.Data, oldObj.Data) {  
+oldObj := e.ObjectOld.DeepCopyObject().(*corev1.Secret)
+if cmp.Equal(newObj.Data, oldObj.Data) {  
   return false  
-}`
+}
+```
 
 I’m still not sure how to only trigger the right events. As the `mapFn` func only gets access to the latest object (not the old or the diff), it does not know if it’s a create, update or delete operation that triggered the event.  
 In case of a delete, for example, 2 events are fired : first an `Update` and then a `Delete`. During the `Delete` operation, the Secret is already removed, so the reconcile will fail. The target Merged Secret will not be updated and the now-removed certificate will still be visible inside the Secret.
@@ -266,13 +301,17 @@ First thing to do here is to DROP the event if the `Secret` is/was created by th
 We then get all the `CertMerge` CR and check if the `Secret` have a Name or the Labels the CR requires.
 
 If yes, we add the CR to the list and return it. Each CR in the list will trigger a Reconcile.
-`// parse each CertMerge CR and reconcile them if needed  
+```go
+// parse each CertMerge CR and reconcile them if needed  
 for _, cm := range cml.Items {  
-  if secretInCertMergeList(&amp;cm, instance) || secretInCertMergeLabels(&amp;cm, instance) {  
+  if secretInCertMergeList(&cm, instance) || secretInCertMergeLabels(&cm, instance) {  
     // trigger the CertMerge Reconcile  
-    result = append(result, reconcile.Request{ NamespacedName: client.ObjectKey{Namespace: cm.Namespace, Name: cm.Name}})``    log.Infof(&#34;CertMerge %s/%s added to Reconcile List&#34;, cm.Namespace, cm.Name)  
+    result = append(result, reconcile.Request{ NamespacedName: client.ObjectKey{Namespace: cm.Namespace, Name: cm.Name}})
+    log.Infof("CertMerge %s/%s added to Reconcile List", cm.Namespace, cm.Name)  
   }  
-}``return result`
+}
+return result
+```
 
 #### Reconcile
 
@@ -280,24 +319,29 @@ The last part and most important is the Reconcile function.
 It is triggered when a`CertMerge` event occurs and when a `Secret` event is concerned by a `CertMerge` CR.
 
 As we merge based on `Secret` Name and `Secret` Labels, we have a two pass strategy where we add all concerned `Secrets` to a list. We finally concat them into a `Secret` and put in back in K8s using the API.
-`secret := newSecretForCR(instance)  
-certData := make(map[string][]byte)``if len(instance.Spec.SecretList) &gt; 0 {  
+```go
+secret := newSecretForCR(instance)  
+certData := make(map[string][]byte)
+if len(instance.Spec.SecretList) > 0 {  
   for _, sec := range instance.Spec.SecretList {  
     secContent, err := r.searchSecretByName(sec.Name, sec.Namespace)  
 ...  
-    certData[sec.Name+&#34;.crt&#34;] = secContent.Data[&#34;tls.crt&#34;]  
-    certData[sec.Name+&#34;.key&#34;] = secContent.Data[&#34;tls.key&#34;]  
+    certData[sec.Name+".crt"] = secContent.Data["tls.crt"]  
+    certData[sec.Name+".key"] = secContent.Data["tls.key"]  
   }  
-}``if len(instance.Spec.Selector) &gt; 0 {  
+}
+if len(instance.Spec.Selector) > 0 {  
   for _, sec := range instance.Spec.Selector {  
     secContent, err := r.searchSecretByLabel(sec.LabelSelector.MatchLabels, sec.Namespace)  
     for _, secCert := range secContent.Items {  
-      certData[secCert.Name+&#34;.crt&#34;] = secCert.Data[&#34;tls.crt&#34;]  
-      certData[secCert.Name+&#34;.key&#34;] = secCert.Data[&#34;tls.key&#34;]  
+      certData[secCert.Name+".crt"] = secCert.Data["tls.crt"]  
+      certData[secCert.Name+".key"] = secCert.Data["tls.key"]  
     }  
   }  
-}``secret.Data = certData  
-err = r.client.Create(context.TODO(), secret)`
+}
+secret.Data = certData  
+err = r.client.Create(context.TODO(), secret)
+```
 
 Of course this is far more complicated, but check the code, this is just a workflow overview.
 
@@ -310,19 +354,22 @@ To do so you will find the sample deployment manifests in the `deploy` folder. Y
 This deployment use the `:latest` image of my public [Docker Hub Registry](https://hub.docker.com/r/prune/cert-operator/).
 
 Quoting the `README.md` file :
-`kubectl apply -f deploy/namespace.yaml  
+```bash
+kubectl apply -f deploy/namespace.yaml  
 kubectl -n cert-merge apply -f deploy/service_account.yaml  
 kubectl -n cert-merge apply -f deploy/role.yaml  
 kubectl -n cert-merge apply -f deploy/role_binding.yaml  
 kubectl -n cert-merge apply -f deploy/certmerge_v1alpha1_certmerge_crd.yaml  
-kubectl -n cert-merge apply -f deploy/operator.yaml`
+kubectl -n cert-merge apply -f deploy/operator.yaml
+```
 
 Ok you’ve got an operator, now what ?
 
 #### Cert-Manager Certificates
 
 Now that you have the Operator, you can split all your `Certificates` in different `Secrets`. This is my first `Certificate` :
-`apiVersion: certmanager.k8s.io/v1alpha1  
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1  
 kind: Certificate  
 metadata:  
   name: cert-svc.dev.domain.com  
@@ -338,19 +385,21 @@ spec:
   dnsNames:  
     - svc.dev.domain.com  
   labels:  
-    env: &#34;dev&#34;  
-    certmerge: &#34;true&#34;  
+    env: "dev"  
+    certmerge: "true"  
   issuerRef:  
     kind: ClusterIssuer  
     name: letsencrypt-prod  
   secretName: cert-svc.dev.domain.com  
 organization:  
-  - My Own Team`
+  - My Own Team
+```
 
 Once Cert-Manager job is done I’ll have a new Secret `cert-svc.dev.domain.com` in the `istio-system` Namespace.
 
 Let’s add another one :
-`apiVersion: certmanager.k8s.io/v1alpha1  
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1  
 kind: Certificate  
 metadata:  
   name: cert-svc.prod.domain.com  
@@ -366,51 +415,62 @@ spec:
   dnsNames:  
     - svc.prod.domain.com  
   labels:  
-    env: &#34;prod&#34;  
-    certmerge: &#34;true&#34;  
+    env: "prod"  
+    certmerge: "true"  
   issuerRef:  
     kind: ClusterIssuer  
     name: letsencrypt-prod  
   secretName: cert-svc.prod.domain.com  
 organization:  
-  - My Own Team`
+  - My Own Team
+```
 
 Ensure all certificates are generated :
-`kubectl -n istio-system get secrets -l certmerge=true``NAME                        TYPE                DATA      AGE  
+```bash
+kubectl -n istio-system get secrets -l certmerge=true
+
+NAME                        TYPE                DATA      AGE  
 cert-svc.dev.domain.com     kubernetes.io/tls   2         7h  
-cert-svc.prod.domain.com    kubernetes.io/tls   2         7h`
+cert-svc.prod.domain.com    kubernetes.io/tls   2         7h
+```
 
 Now Create the Merge. We only need ONE `CertMerge` CR as Istio can only read ONE `Secret`. So let’s put everything in it :
-`apiVersion: certmerge.lecentre.net/v1alpha1  
+```yaml
+apiVersion: certmerge.lecentre.net/v1alpha1  
 kind: CertMerge  
 metadata:  
-  name: &#34;certmerge-istio-ingress&#34;  
+  name: "certmerge-istio-ingress"  
 spec:  
   selector:  
   - labelselector:  
       matchLabels:  
-        certmerge: &#34;true&#34;  
+        certmerge: "true"  
     namespace: istio-system  
   name: istio-ingressgateway-certs  
-  namespace: istio-system`
+  namespace: istio-system
+```
 
 After that, you should have one new `Secret` called `istio-ingressgateway-certs`. Let’s check that :
-`kubectl -n istio-system describe  secrets istio-ingressgateway-certs  
+```bash
+kubectl -n istio-system describe  secrets istio-ingressgateway-certs  
+
 Name:         istio-ingressgateway-certs  
 Namespace:    istio-system  
 Labels:       certmerge=certmerge-istio-ingress  
               creator=certmerge-operator  
-Annotations:  &lt;none&gt;``Type:  Opaque``Data  
+Annotations:  <none>``Type:  Opaque``Data  
 ====  
 cert-svc.dev.domain.com.crt     1675 bytes  
 cert-svc.dev.domain.com.key     1675 bytes  
 cert-svc.prod.domain.com.crt    1675 bytes  
-cert-svc.prod.domain.com.key    1675 bytes`
+cert-svc.prod.domain.com.key    1675 bytes
+```
 
 That’s it !
 
 You can now create the `Istio Gateways` for Dev:
-`apiVersion: networking.istio.io/v1alpha3  
+```yaml
+apiVersion: networking.istio.io/v1alpha3  
 kind: Gateway  
 metadata:  
   name: svc-dev-gateway  
@@ -427,10 +487,12 @@ servers:
     serverCertificate: /etc/istio/ingressgateway-certs/cert-svc.dev.domain.com.crt  
     privateKey: /etc/istio/ingressgateway-certs/cert-svc.dev.domain.com.key  
   hosts:  
-    - &#34;svc.dev.domain.com&#34;`
+    - "svc.dev.domain.com"
+```
 
 And for Prod :
-`apiVersion: networking.istio.io/v1alpha3  
+```yaml
+apiVersion: networking.istio.io/v1alpha3  
 kind: Gateway  
 metadata:  
   name: svc-prod-gateway  
@@ -447,9 +509,10 @@ servers:
     serverCertificate: /etc/istio/ingressgateway-certs/cert-svc.prod.domain.com.crt  
     privateKey: /etc/istio/ingressgateway-certs/cert-svc.prod.domain.com.key  
   hosts:  
-    - &#34;svc.prod.domain.com&#34;`
+    - "svc.prod.domain.com"
+```
 
-Add your `VirtualServices` as usual and you&#39;re done !
+Add your `VirtualServices` as usual and you're done !
 
 One note though :   
 As of now, Istio Ingress Gateway is not able to detect when a “file” (a Certificate) is updated in the `Secret`.   

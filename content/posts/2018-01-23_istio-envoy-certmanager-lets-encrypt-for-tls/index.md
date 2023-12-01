@@ -8,19 +8,20 @@ description: ""
 
 subtitle: "Updates 1"
 
-image: "/posts/2018-01-23_istio-envoy-certmanager-lets-encrypt-for-tls/images/2.jpeg" 
+image: "images/2.jpeg" 
 images:
- - "/posts/2018-01-23_istio-envoy-certmanager-lets-encrypt-for-tls/images/1.jpeg"
- - "/posts/2018-01-23_istio-envoy-certmanager-lets-encrypt-for-tls/images/2.jpeg"
- - "/posts/2018-01-23_istio-envoy-certmanager-lets-encrypt-for-tls/images/3.jpeg"
+ - "images/1.jpeg"
+ - "images/2.jpeg"
+ - "images/3.jpeg"
 
+tags: ["devops", "servicemesh", "kubernetes"]
 
 aliases:
     - "/istio-envoy-cert-manager-lets-encrypt-for-tls-14b6a098f289"
 
 ---
 
-![image](/posts/2018-01-23_istio-envoy-certmanager-lets-encrypt-for-tls/images/1.jpeg#layoutTextWidth)
+![image](images/1.jpeg#layoutTextWidth)
 #### Updates 1
 
 Thanks to comments by Laurent Demailly, here are some updates. This article have been updated accordinately :
@@ -75,11 +76,17 @@ Cert-Manager come with a helm chart so it’s quite easy to deploy… just follo
 
 **[update]**  
 There is now an [official Helm Chart for Cert-Manager](https://github.com/kubernetes/charts/tree/master/stable/cert-manager), you don’t need to `git clone` , just do the `helm install` .
-``git clone https://github.com/jetstack/cert-manager````cd cert-manager````# check out the latest release tag to ensure we use a supported version of cert-manager````git checkout v0.2.3````helm install \`    
-`--name cert-manager \  
---**namespace**` `kube-**system**` `\  
---set ingressShim.extraArgs=&#39;{--default-issuer-name=letsencrypt-prod,--default-issuer-kind=ClusterIssuer}&#39;` `\  
-contrib/charts/cert-manager``
+```bash
+git clone https://github.com/jetstack/cert-manager
+cd cert-manager
+# check out the latest release tag to ensure we use a supported version of cert-manager
+git checkout v0.2.3
+helm install \
+  --name cert-manager \  
+  --namespace kube-system* \  
+  --set ingressShim.extraArgs='{--default-issuer-name=letsencrypt-prod,--default-issuer-kind=ClusterIssuer}' \  
+  contrib/charts/cert-manager
+```
 
 This commands will start a Cert-Manager pod in the kube-system Namespace.
 
@@ -93,7 +100,8 @@ Here’s how it’s working :
 *   Cert-Manager request the certificates for you
 
 So, let’s create the issuers. As I’m creating ClusterIssuers, I don’t care of a particular Namespace :
-`apiVersion: certmanager.k8s.io/v1alpha1  
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1  
 kind: ClusterIssuer  
 metadata:  
   name: letsencrypt-prod  
@@ -101,9 +109,9 @@ metadata:
 spec:  
   acme:  
     # The ACME server URL  
-    server: [https://acme-v01.api.letsencrypt.org/directory](https://acme-v01.api.letsencrypt.org/directory)  
+    server: https://acme-v01.api.letsencrypt.org/directorr
     # Email address used for ACME registration  
-    email: [m](mailto:sthomas@moncoyote.com)e@domain.com  
+    email: me@domain.com  
     # Name of a secret used to store the ACME account private key  
     privateKeySecretRef:  
       name: letsencrypt-prod  
@@ -118,14 +126,15 @@ metadata:
 spec:  
   acme:  
     # The ACME server URL  
-    server: [https://acme-staging.api.letsencrypt.org/directory](https://acme-staging.api.letsencrypt.org/directory)  
+    server: https://acme-staging.api.letsencrypt.org/directory
     # Email address used for ACME registration  
-    email: staging+[m](mailto:cv@lecentre.net)e@domain.com  
+    email: staging+me@domain.com  
     # Name of a secret used to store the ACME account private key  
     privateKeySecretRef:  
       name: letsencrypt-staging  
     # Enable the HTTP-01 challenge provider  
-    http01: {}`
+    http01: {}
+```
 
 Then
 `kubectl apply -f certificate-issuer.yml`
@@ -165,7 +174,8 @@ So let’s implement it…
 #### Certificate
 
 Put this manifest in a file like _certificate-istio.yml_ :
-`apiVersion: certmanager.k8s.io/v1alpha1  
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1  
 kind: Certificate  
 metadata:  
   name: istio-ingress-certs  
@@ -185,7 +195,8 @@ spec:
         ingressClass: none  
       domains:  
       - www.mydomain.com  
-      - mobile.mydomain.com`
+      - mobile.mydomain.com
+```
 
 What we see here is :
 
@@ -199,12 +210,14 @@ then :
 `kubectl apply -f certificate-istio.yml`
 
 Once done, you will start seeing logs going through the cert-manager pod, as well as in the Istio Ingress… something like :
-`istio-ingress-7f8468bb7b-pxl94 istio-ingress [2018-01-23T21:01:53.341Z] &#34;GET /.well-known/acme-challenge/xxxxxxx HTTP/1.1&#34; 503 UH 0 19 0 - &#34;10.20.5.1&#34; &#34;Go-http-client/1.1&#34; &#34;xxx&#34; &#34;www.domain.com&#34; &#34;-&#34;  
-istio-ingress-7f8468bb7b-pxl94 istio-ingress [2018-01-23T21:01:58.287Z] &#34;GET /.well-known/acme-challenge/xxxxxx HTTP/1.1&#34; 503 UH 0 19 0 - &#34;10.20.5.1&#34; &#34;Go-http-client/1.1&#34; &#34;xxxx&#34; &#34;mobile.domain.com&#34; &#34;-&#34;`
+```plaintext
+istio-ingress-7f8468bb7b-pxl94 istio-ingress [2018-01-23T21:01:53.341Z] "GET /.well-known/acme-challenge/xxxxxxx HTTP/1.1" 503 UH 0 19 0 - "10.20.5.1" "Go-http-client/1.1" "xxx" "www.domain.com" "-"  
+istio-ingress-7f8468bb7b-pxl94 istio-ingress [2018-01-23T21:01:58.287Z] "GET /.well-known/acme-challenge/xxxxxx HTTP/1.1" 503 UH 0 19 0 - "10.20.5.1" "Go-http-client/1.1" "xxxx" "mobile.domain.com" "-"
+```
 
 This is because the Let’s Encrypt servers is polling for the validation token and your setup is not working yet. As of now your setup looks like that :
 
-![image](/posts/2018-01-23_istio-envoy-certmanager-lets-encrypt-for-tls/images/2.jpeg#layoutTextWidth)
+![image](images/2.jpeg#layoutTextWidth)
 
 
 Now it’s time to remove the unwanted stuff created by Cert-Manager.   
@@ -219,7 +232,8 @@ Also, don’t remove the pods !! (they will be re-created in case of error)
 Now that your setup is clean, you can go on and re-create the needed Services and Ingress.
 
 You will need as many services as you have different domain names. In our case, 2. Here is the manifest :
-`apiVersion: v1  
+```yaml
+apiVersion: v1  
 kind: Service  
 metadata:  
   name: cert-manager-ingress-www  
@@ -245,7 +259,8 @@ spec:
   - port: 8089  
     name: http-certingr  
   selector:  
-    certmanager.k8s.io/domain: mobile.mydomain.com`
+    certmanager.k8s.io/domain: mobile.mydomain.com
+```
 
 then
 `kubectl apply -f certificate-services.yml`
@@ -257,7 +272,8 @@ Note here that the Service Name does not matter. It’s up to you to give a spec
 #### Ingress
 
 It’s now time to create the Ingress so your “ACME Token Pods” are accessible from the outside.
-`apiVersion: extensions/v1beta1  
+```yaml
+apiVersion: extensions/v1beta1  
 kind: Ingress  
 metadata:  
   annotations:  
@@ -281,7 +297,8 @@ spec:
         backend:  
           serviceName: cert-manager-ingress-mobile  
           servicePort: http-certingr  
-    host: mobile.mydomain.com`
+    host: mobile.mydomain.com
+```
 
 Again, we have a few things to note here :
 
@@ -303,7 +320,8 @@ Checking the Istio-Ingress logs, you should see a couple of _“GET /.well-known
 ### Sample application
 
 I used a sample application to validate my setup is working:
-`apiVersion: v1  
+```yaml
+apiVersion: v1  
 kind: Service  
 metadata:  
   name: helloworld-v1  
@@ -338,7 +356,7 @@ kind: Ingress
 metadata:  
   annotations:  
     kubernetes.io/ingress.class: istio  
-    kubernetes.io/ingress.allow-http: &#34;false&#34;  
+    kubernetes.io/ingress.allow-http: "false"  
   name: istio-ingress-https  
 spec:  
   tls:  
@@ -350,7 +368,7 @@ spec:
         backend:  
           serviceName: helloworld-v1  
           servicePort: 8080  
-    host: [www.mydomain.com](http://www.mydomain.com)  
+    host: www.mydomain.com
   - http:  
       paths:  
       - path: /.*  
@@ -373,7 +391,7 @@ spec:
         backend:  
           serviceName: helloworld-v1  
           servicePort: 8080  
-    host: [www.mydomain.com](http://www.mydomain.com)  
+    host: www.mydomain.com
   - http:  
       paths:  
       - path: /.*  
@@ -398,7 +416,7 @@ spec:
         version: v1  
     spec:  
       containers:  
-        - image: &#34;kelseyhightower/helloworld:v1&#34;  
+        - image: "kelseyhightower/helloworld:v1"  
           name: helloworld  
           ports:  
             - containerPort: 8080  
@@ -420,11 +438,12 @@ spec:
         version: v2  
     spec:  
       containers:  
-        - image: &#34;kelseyhightower/helloworld:v2&#34;  
+        - image: "kelseyhightower/helloworld:v2"  
           name: helloworld  
           ports:  
             - containerPort: 8080  
-              name: http`
+              name: http
+```
 
 We must thanks Kelsy Hightower, again, for his HelloWorld example app 🙏
 
@@ -433,7 +452,7 @@ then:
 
 Note you will need one Ingress for all you HTTPS domains, and one for the HTTP… Only the HTTPS is represented here :
 
-![image](/posts/2018-01-23_istio-envoy-certmanager-lets-encrypt-for-tls/images/3.jpeg#layoutTextWidth)
+![image](images/3.jpeg#layoutTextWidth)
 
 
 Cert-Manager should remove the Token-Exchange pods in the istio-system namespace after the validation is done. Yes, once the Cert-Manager agreed with the Let’s Encrypt servers, they exchange a permanent key that is used for renewal. No need of the pods, and even Services and Ingress, at least if your are sure you will not need to add or change something in the certificate.

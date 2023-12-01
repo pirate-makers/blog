@@ -9,7 +9,7 @@ description: ""
 subtitle: "This is a first post in a long serie to come about what you never heard and maybe never thought about when using K8s (Kubernetes), and…"
 
 
-
+tags: ["devops", "gitops", "kubernetes"]
 
 aliases:
     - "/what-nobody-tells-you-about-kubernetes-3218b47c74d"

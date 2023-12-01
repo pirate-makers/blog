@@ -1,5 +1,5 @@
 ---
-title: "Docker.io & OpenSource Fail (and what to do instead)"
+title: "Ratés avec Docker.io & OpenSource (et quoi faire à la place...)"
 author: "Prune"
 date: 2022-11-29T14:31:56.257Z
 lastmod: 2023-11-30T22:24:45-05:00
@@ -19,7 +19,6 @@ images:
  - "images/7.png"
  - "images/8.png"
 
-tags: ["devops", "docker", "github"]
 
 aliases:
     - "/docker-opensource-fail-and-what-to-do-instead-1459f962064"
@@ -118,7 +117,7 @@ Answer is: not much
 Because KubeColor is a Go program, I used the `goreleaser/goreleaser-action` to build the Release. This includes multi-OS binaries, package and so on. It’s all the stuff you fine in [the Release section of the project](https://github.com/kubecolor/kubecolor/releases).
 
 Just create a `.github/workflows/release.yml` file in your repo and add:
-```yaml
+``` yaml
 name: goreleaser
 
 on:
