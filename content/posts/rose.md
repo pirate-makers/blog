@@ -24,4 +24,16 @@ I went to [https://www.dafont.com/](https://www.dafont.com/ "https://www.dafont.
 
 Dafont offer lots of _free for personal use_ fonts. I used "".
 
+## Code
+
+{{< highlight go "linenos=table,hl_lines=8 15-17,linenostart=199" >}}
+// ... code
+{{< / highlight >}}
+
+or
+
+```go {linenos=table,hl_lines=[8,"15-17"],linenostart=199}
+// ... code
+```
+
 TBD

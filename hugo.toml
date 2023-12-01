@@ -1,0 +1,120 @@
+baseurl = "https://piratemakers.ca"
+title = "Pirate Makers"
+theme = "coder"
+languagecode = "en"
+defaultContentLanguage = "en"
+# defaultContentLanguageInSubdir = true
+# publishDir = "docs"
+cleanDestinationDir = true
+copyright = "Prune @2023"
+paginate = 20
+# canonifyurls = true
+enableEmoji = true
+# enableRobotsTXT = true
+
+pygmentsstyle = "bw"
+pygmentscodefences = true
+pygmentscodefencesguesssyntax = true
+
+disqusShortname = "piratemakers-ca"
+
+[markup.highlight]
+    style = "monokai"
+
+# [languages]
+#     [languages.fr]
+#         contentDir = 'content/fr'
+#         disabled = false
+#         languageCode = 'fr-FR'
+#         languageDirection = 'ltr'
+#         languageName = 'French'
+#         title = 'Pirate Makers'
+#         weight = 2
+#         [languages.fr.params]
+#             subtitle = 'Referenz, Tutorials und Erklärungen'
+#     [languages.en]
+#         contentDir = 'content/en'
+#         disabled = false
+#         languageCode = 'en-US'
+#         languageDirection = 'ltr'
+#         languageName = 'English'
+#         title = 'Pirate Makers'
+#         weight = 1
+#         [languages.en.params]
+#             subtitle = 'Reference, Tutorials, and Explanations'
+
+[imaging]
+    bgColor = '#ffffff'
+    hint = 'photo'
+    quality = 75
+    resampleFilter = 'Box'
+
+[imaging.exif]
+    disableDate = false
+    disableLatLong = false
+    excludeFields = ''
+    includeFields = ''
+
+[params]
+    author = "Prune"
+    info = "Home of the Modern Makers and Pirates"
+    description = "Pirate Makers website"
+    keywords = "blog,developer,personal,cnc,shapeoko,maker,pirate,hacker,go,golang,devops,gitops"
+    avatarurl = "images/skull.jpg"
+    # gravatar = "prune@lecentre.net"
+
+    #faviconSVG = "/img/favicon.svg"
+    favicon_32 = "/img/favicon-32x32.png"
+    favicon_16 = "/img/favicon-16x16.png"
+
+    footercontent = "All Right Reserved."
+
+    enableTwemoji = true
+
+    hidecredits = true
+    hidecopyright = false
+    commit = true
+
+    rtl = false
+
+    math = true
+    customCss = ["/css/custom.css"]
+    # customCss = ["css/custom.css"]
+    # customSCSS = ["scss/custom.scss"]
+    # customJS = ["js/custom.js"]
+
+# Social links
+[[params.social]]
+    name = "Github"
+    icon = "fa fa-2x fa-github"
+    weight = 1
+    url = "https://github.com/pirate-makers/"
+[[params.social]]
+    name = "Twitter"
+    icon = "fa fa-2x fa-twitter"
+    weight = 3
+    url = "https://twitter.com/prune998/"
+
+# Menu links
+[[menu.main]]
+    name = "Blog"
+    weight = 10
+    url  = "/posts/"
+[[menu.main]]
+    name = "About"
+    weight = 20
+    url = "/about/"
+[[menu.main]]
+    name = "Tags"
+    url = "/tags"
+    weight = 30
+
+[taxonomies]
+    category = "categories"
+    series = "series"
+    tag = "tags"
+    author = "authors"
+
+[services]
+  [services.disqus]
+    shortname = 'piratemakers-ca'
