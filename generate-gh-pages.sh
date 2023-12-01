@@ -17,5 +17,6 @@ fi
 
 echo "Generating site"
 hugo
+echo 'gitdir: ../.git/modules/public' > public/.git
 
 cd public && git add --all && git commit -m "publishing ${buildtime} ${version}" && git push && cd ..
