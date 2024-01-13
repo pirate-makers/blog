@@ -29,3 +29,13 @@ Generating site
   Sitemaps         |  1
   Cleaned          |  0
 ```
+
+In case of issue with the `public` submodule being dirty:
+
+```bash
+cd public
+git checkout master
+cd ..
+```
+
+Then run the `./generate-gh-pages.sh` script.
