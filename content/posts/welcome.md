@@ -43,3 +43,13 @@ console.log(foo(5));
 {"a": "v"}
 
 \`\`\`
+
+
+Table:
+|Kind                         | Group              | Version|
+|:--------------------------:|:------------------:|:------:|
+|DatabaseInstance             | sql.gcp.upbound.io | v1beta1|
+|Database                     | sql.gcp.upbound.io | v1beta1|
+|SourceRepresentationInstance | sql.gcp.upbound.io | v1beta1|
+|SSLCert                      | sql.gcp.upbound.io | v1beta1|
+|User                         | sql.gcp.upbound.io | v1beta1|

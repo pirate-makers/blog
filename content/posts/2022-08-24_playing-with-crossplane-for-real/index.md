@@ -19,7 +19,7 @@ images:
  - "images/7.png"
  - "images/8.png"
 
-tags: ["devops", "gitops", "kubernetes"]
+tags: ["devops", "gitops", "kubernetes", "crossplane", "cncf"]
 
 aliases:
     - "/playing-with-crossplane-for-real-f591e66065ae"
