@@ -15,11 +15,11 @@ images:
 
 So, a year and a half ago, I wrote [Playing with Crossplane, for real](https://piratemakers.ca/posts/2022/11/docker.io-opensource-fail-and-what-to-do-instead/) blog post ([link to the Medium original version](https://medium.com/p/f591e66065ae)).
 
-This blog post was relating a real POC I did for my company, where **I* was pushing for using ArgoCD and Crossplane to handle our infrastructure in place of Terraform.
+This blog post was relating a real POC I did for my company, where **I** was pushing for using ArgoCD and Crossplane to handle our infrastructure in place of Terraform.
 
-As you can read, the outcome wasn't exactly what I thought.
+As you may have read, the outcome wasn't exactly what I thought.
 
-I got contacted by Crossplane CEO, who shared my blog post to the team and I discussed many of my pain points with Crossplane Developers during the KubeCon North America 2022 (where I was a speaker, check out the [blog](https://cloud-native-canada.github.io/k8s_setup_tools/) and [video](https://www.youtube.com/watch?v=TKYAEjNg4Hw)).
+I got contacted by Crossplane CEO, who shared my blog post to the Upbound team. I had the chance to discussed many of my pain points with Crossplane Developers during the KubeCon North America 2022 (where I was a speaker, check out the [blog](https://cloud-native-canada.github.io/k8s_setup_tools/) and [video](https://www.youtube.com/watch?v=TKYAEjNg4Hw)).
 Upbound, as a company, stand behind its product and was willing to make it work. At that time they shared that they would release more of their internal providers soon, which would solve most of my problems. 
 
 I wish I had a chance to do the POC once again before that, but.. meh... life, I guess... it's happening now !
@@ -202,7 +202,7 @@ provider-gcp-storage-70a994bdf770          True      1          xpkg.upbound.io/
 upbound-provider-family-gcp-d0f27e03505b   True      1          xpkg.upbound.io/upbound/provider-family-gcp:v0.41.0          Active                                 39d
 ```
 
-The other problem was on the quality of the providers. We'll dive in later.
+The other problem was on the quality of the providers. We'll dive into it later.
 
 ## Docs
 
