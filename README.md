@@ -10,6 +10,14 @@ git clone --recursive git@github.com:pirate-makers/blog.git
 
 Do some changes in the blog posts (content) in `content/posts`
 
+### Test locally
+
+```bash
+hugo serve
+```
+
+### Generate pages
+
 Use the script `generate-gh-pages.sh`:
 
 ```bash

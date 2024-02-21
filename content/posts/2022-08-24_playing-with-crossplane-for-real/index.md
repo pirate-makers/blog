@@ -19,7 +19,7 @@ images:
  - "images/7.png"
  - "images/8.png"
 
-tags: ["devops", "gitops", "kubernetes"]
+tags: ["devops", "gitops", "kubernetes", "crossplane", "cncf"]
 
 aliases:
     - "/playing-with-crossplane-for-real-f591e66065ae"
@@ -40,7 +40,7 @@ So we end up with complicated code, tricks to make things happen or not (like us
 
 The global consensus is that TF is too complicated for Devs team to use and maintain well. It’s down to the Ops to operate it, or at least, try to provide `modules` so Devs can work with what is supposed to be an abstraction.
 
-#### Then enters [Crossplane](https://crossplane.github.io/) !
+#### Then enters  [Crossplane](https://crossplane.github.io/) !
 
 Before diving into Crossplane, let’s put some notice, or as we like to call it:
 
