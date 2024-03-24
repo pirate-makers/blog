@@ -187,11 +187,15 @@ Once rendered, we have:
 ![image](images/turbo-colors.png#layoutTextWidth)
 
 The `dark` theme only uses 6 colors (well, 5 as one if the default white for dark theme, or black for light theme). So here's my selection:
-- {{< colour "yellow" >}}  -> {{< colour "#feb927" >}}
-- {{< colour "magenta" >}} -> {{< colour "#4860e6" >}}
-- {{< colour "green" >}}   -> {{< colour "#6afd6a" >}}
-- {{< colour "red" >}}     -> {{< colour "#c2270a" >}}
-- {{< colour "cyan" >}}    -> {{< colour "#2aabee" >}}
+
+| Terminal Color           | Matching Color           |  protanopia              |       deuteranopia       |               tritanopia |
+|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|
+| {{< colour "yellow" >}}  | {{< colour "#feb927" >}} | {{< colour "#f9bb27" >}} | {{< colour "#fbbc23" >}} | {{< colour "#ffacb6" >}} |
+| {{< colour "magenta" >}} | {{< colour "#4860e6" >}} | {{< colour "#a77fe5" >}} | {{< colour "#888ee4" >}} | {{< colour "#257e7d" >}} |
+| {{< colour "green" >}}   | {{< colour "#6afd6a" >}} | {{< colour "#fee16c" >}} | {{< colour "#fee16c" >}} | {{< colour "#fee16c" >}} |
+| {{< colour "red" >}}     | {{< colour "#c2270a" >}} | {{< colour "#bb8b16" >}} | {{< colour "#936a15" >}} | {{< colour "#ff6579" >}} |
+| {{< colour "cyan" >}}    | {{< colour "#2aabee" >}} | {{< colour "#34adee" >}} | {{< colour "#22afef" >}} | {{< colour "#34b4b5" >}} |
+| Null color (white-ish)   | {{< colour "#2ee5ae" >}} | {{< colour "#e8d0b0" >}} | {{< colour "#c6beb3" >}} | {{< colour "#4ddfe0" >}} |
 
 I also used the `bold` on the `success` and I actually inverted the `error` so the background is `red` and the text is white. High contrast is usually a good helper where we're limited with the possible colors.
 
