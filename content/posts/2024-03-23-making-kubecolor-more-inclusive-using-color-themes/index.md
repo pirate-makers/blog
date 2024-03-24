@@ -125,4 +125,111 @@ theme:
 
 ## Color Blind Theme
 
-...
+First I want to clearly state I do not have any color impairement, and the work I'm trying to achieve here is based on some readings and talking to impaired people. The idea is to provide an out of the box solution to help people with color-blindness. The outcome may not be perfect or even useful. Bare with me.
+
+After some researches, I found the [Cromatic Vision Simulator website](https://asada.website/webCVS/index.html) which allows to load an image and, using a quad view, see what impaired persons may see depending on the kind of disability.
+
+In short, if I upload one of the previous images that captured the `k get pods -o wide` commands, we can check how it look:
+
+using the `dark` theme:
+
+- regular view
+  ![image](images/get-pods-dark.png#layoutTextWidth)
+- Protanopia view
+  ![image](images/get-pods-dark-protanopia.png#layoutTextWidth)
+- deuteranopia view
+  ![image](images/get-pods-dark-deuteranopia.png#layoutTextWidth)
+- tritanopia view
+  ![image](images/get-pods-dark-tritanopia.png#layoutTextWidth)
+
+Now I guess we all understand the issue with the current color scheme of the `dark` theme: any impaired person will lose most of the color informations.
+
+I also tested the view with some chromatic progressions, trying to find a palette that could work:
+
+![image](images/color-cycles-quad.png#layoutTextWidth)
+
+My final conclusion is that it seems possible to achieve a them that will help. What we need here is having different color hues to show the difference of, mostly, good and bad situation, and color cycles when there's a table. The `turbo` color profile seems to help here.
+
+Using the [Observable HQ website](https://observablehq.com/@d3/color-schemes), I used the `discrete 10` schema to cut the rainbow in 10 usable colors:
+
+- {{< colour "#23171b" >}}
+- {{< colour "#4860e6" >}}
+- {{< colour "#2aabee" >}}
+- {{< colour "#2ee5ae" >}}
+- {{< colour "#6afd6a" >}}
+- {{< colour "#c0ee3d" >}}
+- {{< colour "#feb927" >}}
+- {{< colour "#fe6e1a" >}}
+- {{< colour "#c2270a" >}}
+- {{< colour "#900c00" >}}
+
+Once rendered, we have:
+
+![image](images/turbo-colors.png#layoutTextWidth)
+
+The `dark` theme only uses 6 colors (well, 5 as one if the default white for dark theme, or black for light theme):
+- yellow -> {{< colour "#feb927" >}}
+- magenta -> {{< colour "#4860e6" >}}
+- green -> {{< colour "#6afd6a" >}}
+- red -> {{< colour "#c2270a" >}}
+- cyan -> {{< colour "#2aabee" >}}
+
+I also used the `bold` on the `success` and I actually inverted the `error` so the background is `red` and the text is white.
+
+The result seems to be pretty much working in all situations:
+![image](images/get-pod-impaired-theme-1.png#layoutTextWidth)
+
+![image](images/describe-pod-impaired-theme.png#layoutTextWidth)
+
+So now you can use any of the themes if you're concerned by color blindness. They are:
+
+- protanopia-dark
+- protanopia-light
+- deuteranopia-dark
+- deuteranopia-light
+- tritanopia-dark
+- tritanopia-light
+
+Just set your env variables like:
+```bash
+KUBECOLOR_PRESET=protanopia-dark kubecolor get pods
+
+# or
+export KUBECOLOR_PRESET=protanopia-dark
+kubecolor get pods
+```
+
+Or set it in your config file `~/.kube/color.yaml` like:
+```yaml
+preset: protanopia-dark
+```
+
+### Updating the theme
+
+As this is pretty much work in proress, please, feel free to comment and [open an issue](https://github.com/kubecolor/kubecolor/issues) if you feel the current themes can be enhenced.
+
+Also, you can start creating your own theme, by modifying an existing one, then share it either in a `issue` or a `Pull Request`.
+
+Simply add more customization to the `~/.kube/color.yaml`  file:
+
+```yaml
+preset: protanopia-dark
+theme:
+  base:
+    key:
+       - fg=#feb927
+       - fg=white
+    info:
+    primary: fg=#4860e6
+    secondary: fg=#2aabee
+    success: fg=#6afd6a:bold
+    warning: fg=#feb927
+    danger: fg=white:bg=#c2270a
+    muted: fg=#feb927
+  options:
+    flag: fg=#feb927
+  table:
+    header: fg=white:bold:bg=#2aabee
+  status:
+    error: fg=white:bg=#c2270a
+```
