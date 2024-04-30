@@ -1,7 +1,7 @@
 ---
 title: Adding color-blind themes to Kubecolor to make Kubernetes more inclusive
 description: "In this article we'll explore the new Custom Color Theme for Kubecolor and how to be more inclusive by offering themes for color-blind (color disabled or color impaired) people."
-date: 2024-03-23T21:19:04.281Z
+date: 2024-04-30T10:19:04.281Z
 preview: ""
 showToc: true
 # TocOpen: true # see https://github.com/adityatelange/hugo-PaperMod/blob/7d67d64bb7610443239fa7085ebabbc70ac7cc11/layouts/partials/toc.html
@@ -13,6 +13,22 @@ type: default
 image: "images/1.png" 
 images:
  - "images/1.png"
+ - "images/Kubecolor_Logo_White.png"
+ - "images/color-cycles-quad.png"
+ - "images/color-cycles.png"
+ - "images/crash-magenta.png"
+ - "images/dark-theme.png"
+ - "images/describe-pod-impaired-theme.png"
+ - "images/get-pod-impaired-theme-1.png"
+ - "images/get-pods-dark-deuteranopia.png"
+ - "images/get-pods-dark-protanopia.png"
+ - "images/get-pods-dark-tritanopia.png"
+ - "images/get-pods-dark.png"
+ - "images/get-pods-impaired-theme-compared.png"
+ - "images/kubecolor-logo-impaired.png"
+ - "images/pre-0.0.21-dark-theme.png"
+ - "images/running-blue.png"
+ - "images/turbo-colors.png"
 ---
 ![image](images/kubecolor-logo-impaired.png#layoutTextWidth)
 
