@@ -1,7 +1,2 @@
-code {
-  padding: 5px 6px;
-}
-
-img.circle {
-  border-radius: 5%;
-}
+/* Site-specific CSS overrides.
+   Prefer assets/scss/_custom.scss (compiled with theme variables). */

@@ -1,0 +1,64 @@
+name: Hugo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: hugo-${{ github.ref }}
+  # Cancel superseded PR builds, but never cancel a deploy in progress
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  HUGO_VERSION: '0.168.0'
+  SASS_VERSION: '1.106.1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history for enableGitInfo (lastmod)
+
+      - name: Setup Dart Sass
+        run: |
+          curl -sL -o /tmp/dart-sass.tar.gz \
+            https://github.com/sass/dart-sass/releases/download/${{ env.SASS_VERSION }}/dart-sass-${{ env.SASS_VERSION }}-linux-x64.tar.gz
+          tar -xzf /tmp/dart-sass.tar.gz -C /tmp
+          echo "/tmp/dart-sass" >> "$GITHUB_PATH"
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true
+
+      - name: Build
+        run: hugo --gc --minify
+
+      - name: Upload site artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: public
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

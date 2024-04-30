@@ -1,0 +1,128 @@
+/* Site-specific styles — compiled after the theme styles.
+   Theme variables are available (see themes/hello-friend-ng/assets/scss/_variables.scss). */
+@use "variables" as *;
+
+// ---------------------------------------------------------------------------
+// Readability
+// ---------------------------------------------------------------------------
+
+// Larger body text; rem-based sizes (headings, menus) keep their theme scale.
+body {
+  font-size: 1.125rem; // 18px
+
+  @media #{$media-size-phone} {
+    font-size: 1.0625rem; // 17px
+  }
+}
+
+// Comfortable reading column (~70 characters).
+.post {
+  max-width: 700px;
+  padding: 20px 24px;
+
+  @media #{$media-size-tablet} {
+    max-width: 640px;
+  }
+}
+
+.post-content {
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+
+  p {
+    margin: 1.2em 0;
+  }
+
+  // Make links clearly visible in long-form text.
+  a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, currentColor 50%, transparent);
+
+    &:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  // Light separator above sections for easier scanning.
+  h2 {
+    margin-top: 2em;
+    padding-top: 0.6em;
+    border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  }
+
+  li {
+    margin: 0.3em 0;
+  }
+
+  code {
+    font-size: 0.875em;
+  }
+
+  pre {
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  blockquote {
+    margin: 30px 40px;
+  }
+}
+
+// Carried over from static/css/custom.css
+code {
+  padding: 5px 6px;
+}
+
+img.circle {
+  border-radius: 5%;
+}
+
+// ---------------------------------------------------------------------------
+// Sticky header
+// ---------------------------------------------------------------------------
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+
+// Keep anchored sections clear of the fixed header when jumping to #fragments.
+html {
+  scroll-padding-top: 84px;
+}
+
+// ---------------------------------------------------------------------------
+// Wide layout toggle (header button, see static/js/width-toggle.js)
+// ---------------------------------------------------------------------------
+
+.width-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+html[data-width="wide"] {
+  .post {
+    max-width: none;
+    padding: 20px clamp(24px, 4vw, 80px);
+  }
+
+  // Covers bleed to the full column width like the content does.
+  .post-cover {
+    width: 100%;
+    max-width: 100%;
+    margin: 40px 0;
+  }
+}

@@ -2,13 +2,12 @@ baseurl = "https://piratemakers.ca"
 title = "Pirate Makers"
 # theme = "coder"
 theme = "hello-friend-ng"
-languagecode = "en-us"
+locale = "en-us"
 defaultContentLanguage = "en"
 # defaultContentLanguageInSubdir = true
 # publishDir = "docs"
 cleanDestinationDir = true
 copyright = "Prune @2023"
-paginate = 20
 rssLimit  = 50  # Maximum number of items in the RSS feed.
 
 archetypeDir = "archetypes"
@@ -31,25 +30,23 @@ disableSitemap = false
 disable404     = false
 disableHugoGeneratorInject = false
 
-PygmentsCodeFences = true
-PygmentsStyle = "monokai"
-
-disqusShortname = "piratemakers-ca"
-
 [permalinks]
   posts = "/posts/:year/:month/:title/"
 
-[blackfriday]
-  hrefTargetBlank = true
+[pagination]
+  pagerSize = 20
 
-[markup.highlight]
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      # Content includes raw HTML (e.g. old posts); keep rendering it.
+      unsafe = true
+  [markup.highlight]
     style = "monokai"
     tabWidth = 2
-    
+
 [imaging]
   bgColor = '#ffffff'
-  hint = 'photo'
-  quality = 75
   resampleFilter = 'Box'
 
 [imaging.exif]
@@ -58,8 +55,14 @@ disqusShortname = "piratemakers-ca"
   excludeFields = ''
   includeFields = ''
 
+[imaging.jpeg]
+  quality = 75
+
+[imaging.webp]
+  quality = 75
+  hint = 'photo'
+
 [params]
-  author = "Prune"
   info = "Home of the Modern Makers and Pirates"
   description = "Pirate Makers website"
   # homeSubtitle = "Making, but differently..."
@@ -118,11 +121,20 @@ disqusShortname = "piratemakers-ca"
   # linking local files with their path relative to the static folder, e.g. "css/styles.css"
   #
   customCSS = ["/css/custom.css"]
-  customJS  = []
+
+  # Light/dark toggle in the header (theme feature)
+  enableThemeToggle = true
+
+  # Extra scripts loaded after the theme bundle
+  customJS  = ["/js/width-toggle.js"]
 
   # Toggle this option need to rebuild SCSS, requires extended version of Hugo
   #
   justifyContent = false  # Set "text-align: justify" to .post-content.
+
+# Site author (map: the theme reads .name from it)
+[params.author]
+  name = "Prune"
 
 # Social links
 # [[params.social]]
@@ -164,6 +176,10 @@ disqusShortname = "piratemakers-ca"
     name = "About"
     weight = 20
     url = "/about/"
+[[menu.main]]
+    name = "Resume"
+    weight = 25
+    url = "/resume/"
 [[menu.main]]
     name = "Tags"
     url = "/tags"
