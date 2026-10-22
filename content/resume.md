@@ -1,7 +1,7 @@
 +++
-title = "Sébastien Thomas — Resume"
+title = "Sebastien (Prune) Thomas — Resume"
 slug = "resume"
-description = "Resume of Sébastien Thomas — Lead Platform Engineer (DevOps / SRE)"
+description = "Resume of Sebastien Thomas — Lead Platform Engineer (DevOps / SRE)"
 date = 2026-10-22
 +++
 
