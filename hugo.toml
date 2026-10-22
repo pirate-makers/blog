@@ -181,9 +181,9 @@ disableHugoGeneratorInject = false
     weight = 25
     url = "/resume/"
 [[menu.main]]
-    name = "Tags"
-    url = "/tags"
+    name = "Search"
     weight = 30
+    url = "/tags"
 
 [taxonomies]
     category = "categories"

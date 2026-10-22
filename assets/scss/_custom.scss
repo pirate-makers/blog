@@ -81,6 +81,155 @@ img.circle {
 }
 
 // ---------------------------------------------------------------------------
+// Tag filter pages (/tags/ and /tags/<tag>/)
+// ---------------------------------------------------------------------------
+
+.tag-filter__search {
+  display: block;
+  width: min(420px, 100%);
+  margin: 8px auto 18px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  color: inherit;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 8px;
+
+  &:focus {
+    outline: none;
+    border-color: color-mix(in srgb, currentColor 60%, transparent);
+  }
+
+  &::placeholder {
+    opacity: 0.5;
+  }
+}
+
+.tag-filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 0 0 32px;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    border-color: color-mix(in srgb, currentColor 55%, transparent);
+  }
+
+  &[aria-pressed="true"] {
+    background: color-mix(in srgb, currentColor 15%, transparent);
+    border-color: color-mix(in srgb, currentColor 60%, transparent);
+  }
+}
+
+.tag-chip__count {
+  font-size: 0.72rem;
+  opacity: 0.55;
+}
+
+.tag-chip--clear {
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.tag-articles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.tag-articles__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.tag-articles__link {
+  flex: 1 1 auto;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.tag-articles__meta {
+  font-size: 0.8rem;
+  opacity: 0.55;
+  white-space: nowrap;
+}
+
+.tag-articles__tags {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-mini {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.tag-filter__empty {
+  opacity: 0.6;
+}
+
+// The theme's .hidden utility must beat our later display:flex rules,
+// otherwise filtered items never disappear.
+.tag-articles__item.hidden,
+.tag-chip.hidden,
+.tag-filter__empty.hidden {
+  display: none;
+}
+
+// ---------------------------------------------------------------------------
+// Tag bubbles on list pages (e.g. /posts/)
+// ---------------------------------------------------------------------------
+
+a.tag-mini {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 1;
+    border-color: color-mix(in srgb, currentColor 55%, transparent);
+  }
+}
+
+.post-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 0 12px;
+}
+
+// ---------------------------------------------------------------------------
 // Sticky header
 // ---------------------------------------------------------------------------
 

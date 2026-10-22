@@ -6,7 +6,7 @@ preview: ""
 showToc: true
 # TocOpen: true # see https://github.com/adityatelange/hugo-PaperMod/blob/7d67d64bb7610443239fa7085ebabbc70ac7cc11/layouts/partials/toc.html
 draft: false
-tags: ["kubernetes", "cncf", "go", "kubecolor", "inclusion"]
+tags: ["kubernetes", "cncf", "golang", "kubecolor", "inclusion"]
 categories: ["devops"]
 type: default
 
