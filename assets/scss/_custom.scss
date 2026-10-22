@@ -81,6 +81,103 @@ img.circle {
 }
 
 // ---------------------------------------------------------------------------
+// Tag filter pages (/tags/ and /tags/<tag>/)
+// ---------------------------------------------------------------------------
+
+.tag-filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 24px 0 32px;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    border-color: color-mix(in srgb, currentColor 55%, transparent);
+  }
+
+  &[aria-pressed="true"] {
+    background: color-mix(in srgb, currentColor 15%, transparent);
+    border-color: color-mix(in srgb, currentColor 60%, transparent);
+  }
+}
+
+.tag-chip__count {
+  font-size: 0.72rem;
+  opacity: 0.55;
+}
+
+.tag-chip--clear {
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.tag-articles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.tag-articles__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.tag-articles__link {
+  flex: 1 1 auto;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.tag-articles__meta {
+  font-size: 0.8rem;
+  opacity: 0.55;
+  white-space: nowrap;
+}
+
+.tag-articles__tags {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-mini {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.tag-filter__empty {
+  opacity: 0.6;
+}
+
+// ---------------------------------------------------------------------------
 // Sticky header
 // ---------------------------------------------------------------------------
 

@@ -1,0 +1,14 @@
+{{ define "main" }}
+    <div class="content">
+        <main class="posts">
+            <h1>{{ .Title }}</h1>
+
+            {{ if .Content }}
+                <div class="content">{{ .Content }}</div>
+            {{ end }}
+
+            {{ $pages := where .Site.RegularPages "Params.tags" "!=" nil }}
+            {{ partial "tag-filter.html" (dict "pages" $pages "selected" slice) }}
+        </main>
+    </div>
+{{ end }}
