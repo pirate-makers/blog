@@ -6,6 +6,10 @@
 {{ $terms := site.Taxonomies.tags.Alphabetical }}
 
 <div class="tag-filter">
+    <label class="screen-reader-text" for="tag-search">Search articles</label>
+    <input type="search" id="tag-search" class="tag-filter__search"
+           placeholder="Filter by title or tag…" autocomplete="off" />
+
     <div class="tag-filter__chips" role="group" aria-label="Filter articles by tag">
         {{ range $terms }}
             <button type="button" class="tag-chip not-selectable"
@@ -21,7 +25,7 @@
         {{ range $pages }}
             {{ $tags := slice }}
             {{ range .GetTerms "tags" }}{{ $tags = $tags | append .Name }}{{ end }}
-            <li class="tag-articles__item" data-tags="{{ delimit $tags "|" | lower }}">
+            <li class="tag-articles__item" data-tags="{{ delimit $tags "|" | lower }}" data-title="{{ .Title | lower }}">
                 <a class="tag-articles__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
                 <span class="tag-articles__meta">{{ time.Format .Site.Params.dateform .Date }}</span>
                 <span class="tag-articles__tags">
@@ -42,6 +46,7 @@
     var clearBtn = root.querySelector("[data-clear]");
     var items = [].slice.call(root.querySelectorAll(".tag-articles__item"));
     var emptyMsg = root.querySelector(".tag-filter__empty");
+    var searchInput = root.querySelector(".tag-filter__search");
 
     function activeTags() {
         return chips
@@ -51,14 +56,18 @@
 
     function apply() {
         var active = activeTags();
+        var q = searchInput ? searchInput.value.trim().toLowerCase() : "";
         var shown = 0;
         items.forEach(function (el) {
             var tags = (el.getAttribute("data-tags") || "").split("|");
-            var ok = active.length === 0 || active.every(function (t) { return tags.indexOf(t) !== -1; });
+            var title = el.getAttribute("data-title") || "";
+            var okTags = active.length === 0 || active.every(function (t) { return tags.indexOf(t) !== -1; });
+            var okText = q === "" || title.indexOf(q) !== -1 || tags.join(" ").indexOf(q) !== -1;
+            var ok = okTags && okText;
             el.classList.toggle("hidden", !ok);
             if (ok) shown++;
         });
-        clearBtn.classList.toggle("hidden", active.length === 0);
+        clearBtn.classList.toggle("hidden", active.length === 0 && q === "");
         emptyMsg.classList.toggle("hidden", shown !== 0);
     }
 
@@ -69,8 +78,13 @@
         });
     });
 
+    if (searchInput) {
+        searchInput.addEventListener("input", apply);
+    }
+
     clearBtn.addEventListener("click", function () {
         chips.forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+        if (searchInput) searchInput.value = "";
         apply();
     });
 

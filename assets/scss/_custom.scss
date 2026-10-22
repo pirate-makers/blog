@@ -84,12 +84,35 @@ img.circle {
 // Tag filter pages (/tags/ and /tags/<tag>/)
 // ---------------------------------------------------------------------------
 
+.tag-filter__search {
+  display: block;
+  width: min(420px, 100%);
+  margin: 8px auto 18px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  color: inherit;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 8px;
+
+  &:focus {
+    outline: none;
+    border-color: color-mix(in srgb, currentColor 60%, transparent);
+  }
+
+  &::placeholder {
+    opacity: 0.5;
+  }
+}
+
 .tag-filter__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
-  margin: 24px 0 32px;
+  margin: 0 0 32px;
 }
 
 .tag-chip {
