@@ -1,0 +1,104 @@
+/* Print stylesheet for content/resume.md -> resume.pdf (pandoc + weasyprint) */
+
+@page {
+  size: Letter;
+  margin: 15mm 16mm 16mm;
+
+  @bottom-left {
+    content: "Sebastien (Prune) Thomas — cv@lecentre.net";
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 7.5pt;
+    color: #999;
+  }
+  @bottom-right {
+    content: "Page " counter(page) " of " counter(pages);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 7.5pt;
+    color: #999;
+  }
+}
+
+html {
+  font-size: 10pt;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 10pt;
+  line-height: 1.38;
+  color: #1f2328;
+  margin: 0;
+  hyphens: none;
+}
+
+/* ---- Header block (headline + contact lines, before the <hr>) ---- */
+
+body > p:nth-of-type(1) {
+  font-size: 14pt;
+  text-align: center;
+  margin: 0 0 2px;
+}
+body > p:nth-of-type(1) strong {
+  font-weight: 700;
+}
+
+body > p:nth-of-type(2) {
+  text-align: center;
+  font-size: 9.5pt;
+  color: #444;
+  margin: 0 0 4px;
+}
+
+hr {
+  display: none; /* section titles already carry a rule */
+}
+
+/* ---- Sections ---- */
+
+h2 {
+  font-size: 11pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #111;
+  border-bottom: 1px solid #bbb;
+  padding-bottom: 2px;
+  margin: 13px 0 5px;
+  break-after: avoid;
+}
+
+h3 {
+  font-size: 10.5pt;
+  margin: 9px 0 1px;
+  break-after: avoid;
+}
+
+p {
+  margin: 3px 0;
+}
+
+ul {
+  margin: 2px 0 5px;
+  padding-left: 16px;
+}
+
+li {
+  margin: 1.5px 0;
+  break-inside: avoid;
+}
+
+/* "Tech: ..." lines and other emphasis */
+em {
+  font-size: 9pt;
+  color: #555;
+}
+
+strong {
+  font-weight: 600;
+  color: #111;
+}
+
+a {
+  color: #1a5dab;
+  text-decoration: none;
+}

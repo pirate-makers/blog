@@ -1,8 +1,11 @@
 +++
-title = "Sebastien (Prune) Thomas — Resume"
+title = "Sebastien (Prune) THOMAS — Resume"
 slug = "resume"
-description = "Resume of Sebastien Thomas — Lead Platform Engineer (DevOps / SRE)"
+description = "Resume of Sebastien THOMAS — Lead Platform Engineer (DevOps / SRE)"
 date = 2026-10-22
+layout = "resume"
+pdf = "/resume-en.pdf"
+pdfLabel = "Download PDF"
 +++
 
 **Lead Platform Engineer (DevOps / SRE)**

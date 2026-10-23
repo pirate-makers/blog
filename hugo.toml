@@ -167,23 +167,7 @@ disableHugoGeneratorInject = false
     name = "stackoverflow"
     url  = "https://stackoverflow.com/users/2414380/prune"
 
-# Menu links
-[[menu.main]]
-    name = "Blog"
-    weight = 10
-    url  = "/posts/"
-[[menu.main]]
-    name = "About"
-    weight = 20
-    url = "/about/"
-[[menu.main]]
-    name = "Resume"
-    weight = 25
-    url = "/resume/"
-[[menu.main]]
-    name = "Search"
-    weight = 30
-    url = "/tags"
+# Menu links are defined per language, see [languages.*.menu] below.
 
 [taxonomies]
     category = "categories"
@@ -242,9 +226,41 @@ disableHugoGeneratorInject = false
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.en.params]
     homeSubtitle  = "Making, but differently..."
+  [[languages.en.menu.main]]
+    name = "Blog"
+    weight = 10
+    url  = "/posts/"
+  [[languages.en.menu.main]]
+    name = "About"
+    weight = 20
+    url = "/about/"
+  [[languages.en.menu.main]]
+    name = "Resume"
+    weight = 25
+    url = "/resume/"
+  [[languages.en.menu.main]]
+    name = "Search"
+    weight = 30
+    url = "/tags"
 
   [languages.fr]
     weight    = 2
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.fr.params]
     homeSubtitle  = "Bricoler, mais de maniere differente..."
+  [[languages.fr.menu.main]]
+    name = "Blog"
+    weight = 10
+    url  = "/fr/posts/"
+  [[languages.fr.menu.main]]
+    name = "À propos"
+    weight = 20
+    url = "/fr/apropos/"
+  [[languages.fr.menu.main]]
+    name = "CV"
+    weight = 25
+    url = "/fr/resume/"
+  [[languages.fr.menu.main]]
+    name = "Recherche"
+    weight = 30
+    url = "/fr/tags"

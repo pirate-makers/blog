@@ -1,2 +1,30 @@
 /* Site-specific CSS overrides.
    Prefer assets/scss/_custom.scss (compiled with theme variables). */
+
+/* Resume page: PDF download button (see layouts/_default/resume.html) */
+.resume-pdf {
+  margin: 0.75rem 0 1.5rem;
+}
+
+.resume-pdf a {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  color: #999;
+}
+
+.resume-pdf a:hover {
+  border-color: #999;
+  color: #222;
+}
+
+html[data-theme="dark"] .resume-pdf a {
+  border-color: #4e4e57;
+  color: #b3b3bd;
+}
+
+html[data-theme="dark"] .resume-pdf a:hover {
+  border-color: #b3b3bd;
+  color: #a9a9b3;
+}
