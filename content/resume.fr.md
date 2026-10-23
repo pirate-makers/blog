@@ -1,14 +1,14 @@
 +++
 title = "Sebastien (Prune) THOMAS — CV"
 slug = "resume"
-description = "CV de Sebastien THOMAS — Ingénieur plateforme principal (DevOps / SRE)"
+description = "CV de Sebastien THOMAS — Ingénieur responsable de plateforme informatique  (Tech Lead / DevOps / SRE)"
 date = 2026-10-22
 layout = "resume"
 pdf = "/resume-fr.pdf"
 pdfLabel = "Télécharger le PDF"
 +++
 
-**Ingénieur plateforme principal (DevOps / SRE)**
+**Ingénieur responsable de plateforme informatique (Lead Engineer, Tech Lead, DevOps / SRE)**
 
 Lévis, Québec, Canada · +1 (581) 307-8232 · [cv@lecentre.net](mailto:cv@lecentre.net)
 [github.com/prune998](https://github.com/prune998) · [piratemakers.ca/posts](https://piratemakers.ca/posts/)
@@ -17,27 +17,27 @@ Lévis, Québec, Canada · +1 (581) 307-8232 · [cv@lecentre.net](mailto:cv@lece
 
 ## Profil
 
-Profil SRE et ingénierie de production avec **plus de 25 ans** d'exploitation d'infrastructures Internet — de l'ère de l'hébergement sur serveurs physiques (AOL, RTL) aux flottes Kubernetes sur AWS, GCP et Azure.
+Profil SRE et ingénierie de production avec **plus de 25 ans** d'exploitation d'infrastructures Internet — de l'ère de l'hébergement sur serveurs physiques (AOL, RTL) aux cloud Kubernetes sur AWS, GCP et Azure.
 
 Je construis l'automatisation qui fait passer une infrastructure de « installée » à « fiable en production » : **CI/CD, GitOps avec Argo CD, observabilité et outillage du cycle de vie** — avec une obsession : transformer le travail manuel et les pannes récurrentes en détection et réparation automatisées.
 
-Reconversion vers le **développement Go** et désormais l'IA. Je construis actuellement une **« Platform Factory »** pilotée par l'IA qui automatise de bout en bout les opérations de plateforme et la remédiation des déploiements.
+**Développement Go** et désormais l'IA. Je construis actuellement une **« Platform Factory »** pilotée par l'IA qui automatise de bout en bout les opérations de plateforme et la remédiation des déploiements.
 
 ## Faits saillants
 
 - **Plus de 25 ans d'exploitation d'infrastructures de production** — ingénierie systèmes Linux/Solaris/UNIX depuis 1998, de l'hébergement sur serveurs physiques (Club-Internet, Freesbee, AOL, RTL) aux flottes cloud-native.
 - **Golang (Go)** pour l'automatisation de production et les services — provisioning, CI/CD, monitoring, outils de test de charge et outillage général.
 - **Adopteur précoce de Kubernetes** ; flottes multi-cloud (Kops sur AWS, GKE, Azure AKS) ; **GitOps à l'échelle de la flotte : Argo CD (contributeur), Kargo, ApplicationSets sur mesure**.
-- **Fiabilité en production :** ingénierie de terrain SRE chez Tetrate (Istio/Envoy) ; migrations d'observabilité (Prometheus/Thanos → VictoriaMetrics, Grafana, Loki) ; outillage de test de charge HTTP/2 + gRPC.
+- **Fiabilité en production :** ingénierie / SRE chez Tetrate (Istio/Envoy) ; migrations d'observabilité (Prometheus/Thanos → VictoriaMetrics, Grafana, Loki) ; outillage de test de charge HTTP/2 + gRPC.
 - **OSS :** mainteneur de KubeColor ; correctifs et fonctionnalités pour Cilium, Stern, Argo CD, cert-manager…
 - **Ambassadeur CNCF** (depuis 2024), conférencier KubeCon, organisateur de meetups — communication claire, responsabilité transverse.
 
 ## Compétences techniques
 
 - **Langages :** Go, Python (par le passé), C, JavaScript/HTML/CSS.
-- **Kubernetes & automatisation de flotte :** adopteur précoce — Kops sur AWS, GKE, Azure AKS ; Operators, Helm ; Argo CD (ApplicationSets), promotions Kargo ; plateformes d'hébergement mutualisées multi-locataires.
-- **Fiabilité & observabilité de production :** Prometheus, Thanos, VictoriaMetrics, Grafana, Loki, Fluentd, Jaeger, Zipkin, SkyWalking ; réponse aux incidents et analyse de causes racines en rôle SRE ; test de charge (HTTP/2, gRPC).
-- **Linux & cycle de vie des serveurs :** ingénierie Linux/UNIX depuis 1998 — architecture, provisioning et maintenance d'infrastructures d'hébergement à grande échelle.
+- **Kubernetes & automatisation Cloud :** Kops sur AWS, EKS, GKE, Azure AKS ; Operators, Helm ; Argo CD (ApplicationSets), promotions Kargo ; plateformes d'hébergement mutualisées multi-locataires.
+- **Fiabilité & observabilité de production :** Prometheus, Thanos, VictoriaMetrics, Grafana, Loki, Fluentd, Jaeger, Zipkin, SkyWalking ; réponse aux incidents et analyse de causes en rôle SRE ; test de charge (HTTP/2, gRPC).
+- **Linux & cycle de vie des serveurs :** ingénierie Linux/UNIX — architecture, provisioning et maintenance d'infrastructures d'hébergement à grande échelle.
 - **Réseaux :** TCP/IP, gRPC, HTTP/2, la plupart des protocoles Internet.
 - **Cloud :** AWS, GCP, Azure ; Docker et l'écosystème Cloud Native, Cloudflare.
 - **Données & streaming :** Kafka, ZooKeeper, NATS, etcd, Redis, MongoDB, PostgreSQL, MySQL, Elasticsearch (ELK), Cassandra, Hadoop.
@@ -45,18 +45,19 @@ Reconversion vers le **développement Go** et désormais l'IA. Je construis actu
 
 ## Expérience professionnelle
 
-### Ingénieur logiciel principal — Wunderkind (2022 – aujourd'hui)
+### Lead Software Engineer — Wunderkind (2022 – aujourd'hui)
 
 Équipe Infrastructure/Plateforme
 
 - Construction d'une « Platform Factory » pilotée par l'IA : automatisation agentique qui transforme les opérations de plateforme récurrentes en flux de travail autonomes.
-- Maintien des abstractions d'infrastructure orientées développeurs : Terraform, Kubernetes, GCP, Helm, CI/CD sur GitLab et GitHub — les équipes produit livrent sans toucher à l'infrastructure brute.
+- Maintien des abstractions d'infrastructure orientées développeurs : Terraform, Terragrunt, Kubernetes, GCP, Helm, CI/CD sur GitLab et GitHub — les équipes produit livrent sans toucher à l'infrastructure brute.
 - Pilotage de la migration GitLab→GitHub : GitHub Actions, Argo CD, promotions Kargo, ApplicationSets Argo sur mesure — livraison GitOps à l'échelle de la flotte.
 - Migration de l'observabilité de Prometheus/Thanos vers VictoriaMetrics, Grafana et Loki.
+- Creation et deployment d'une plateforme de developement interne et d'un registre d'applications (Go, Webhooks, Actions).
 
 *Tech : Kubernetes, GCP, Terraform, Helm, Argo CD, Kargo, GitHub Actions, VictoriaMetrics, Grafana, Loki, Claude (IA agentique).*
 
-### Ingénieur logiciel principal — The New York Times (2020 – 2022)
+### Lead Software Engineer — The New York Times (2020 – 2022)
 
 Équipe Delivery Platform, au service de tous les services du NYT
 
@@ -103,7 +104,7 @@ Assurance et banque
 
 - Création d'une plateforme multi-cloud hébergeant une application CMS à grande échelle, permettant aux entités AXA de publier rapidement des sites web orientés clients.
 - Automatisation du build et du déploiement des applications (Java, Scala, Node.js) avec Ansible, Docker et Python.
-- Migration des déploiements Docker vers OpenShift.
+- Migration des déploiements Docker vers OpenShift (Kubernetes).
 - Recrutement et management d'une équipe de 6 ingénieurs ops répartie entre la France et Hong Kong.
 
 *Tech : Elasticsearch (ELK), Redis, MongoDB, ZooKeeper, Kafka, Docker, Cassandra, Hadoop, Nginx, HAProxy, Python, Ansible, Centreon, InfluxDB, Jenkins, Java, Scala, Node.js, AWS (EC2, S3, SES), LDAP, Ubuntu Linux, Btrfs, Tomcat, Jetty, Git, VMware ESX, OpenShift.*
@@ -125,7 +126,7 @@ Français (langue maternelle) · Anglais (courant — parlé, écrit, technique)
 
 ## Communauté & centres d'intérêt
 
-Ambassadeur CNCF (depuis 2024) · Organisateur de meetups CNCF/K8s (Est du Canada & Canada) · Conférencier KubeCon · Blogueur technique sur piratemakers.ca · Menuiserie, hockey sur glace, impression 3D, DJing.
+Ambassadeur CNCF · Organisateur de meetups CNCF/K8s (Est du Canada & Canada) · Conférencier KubeCon · Blogueur technique sur piratemakers.ca · Menuiserie, hockey sur glace, impression 3D, DJing.
 
 ## Références
 

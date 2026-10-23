@@ -53,6 +53,7 @@ Infrastructure/Platform Team
 - Own developer-facing infrastructure abstractions: Terraform, Kubernetes, GCP, Helm, CI/CD across GitLab and GitHub — product teams ship without touching raw infrastructure.
 - Led the GitLab→GitHub migration: GitHub Actions, Argo CD, Kargo promotions, custom Argo ApplicationSets — fleet-wide GitOps delivery.
 - Migrated observability from Prometheus/Thanos to VictoriaMetrics, Grafana, and Loki.
+- Create an Internal Developper Platform and Application Registry (Go, Webhooks, Actions, UI)
 
 *Tech: Kubernetes, GCP, Terraform, Helm, Argo CD, Kargo, GitHub Actions, VictoriaMetrics, Grafana, Loki, Claude (agentic AI).*
 
