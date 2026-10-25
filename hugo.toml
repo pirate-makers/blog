@@ -7,7 +7,7 @@ defaultContentLanguage = "en"
 # defaultContentLanguageInSubdir = true
 # publishDir = "docs"
 cleanDestinationDir = true
-copyright = "Prune @2023"
+copyright = "Prune @2026"
 rssLimit  = 50  # Maximum number of items in the RSS feed.
 
 archetypeDir = "archetypes"
@@ -179,8 +179,8 @@ disableHugoGeneratorInject = false
   [services.disqus]
     shortname = 'piratemakers-ca'
 
-  # Custom footer 
-  # If you want, you can easily override the default footer with your own content. 
+  # Custom footer
+  # If you want, you can easily override the default footer with your own content.
   #
   [params.footer]
     trademark = 2023
@@ -217,7 +217,7 @@ disableHugoGeneratorInject = false
     # logoCursorColor    = "#67a2c9"
     # Set to a valid CSS time value to change the animation duration, "0s" to disable.
     # logoCursorAnimate  = "2s"
-    # Append the current url pathname to logoText 
+    # Append the current url pathname to logoText
     # logoCursorPathname = true
 
 [languages]

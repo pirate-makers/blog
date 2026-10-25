@@ -97,7 +97,7 @@ At the moment, only Prune is onboard.
 
 ### 🤝 Open source contributions
 
-Maintainer of [KubeColor](https://github.com/prune998/kubecolor) (kubectl output colorizer) and of a [friendly fork of Stern](https://github.com/prune998/stern) (multi-pod log tailing). Patches and features contributed upstream to [Argo CD](https://github.com/prune998/argo-cd), [Kargo](https://github.com/prune998/kargo), [ApplicationSet](https://github.com/prune998/applicationset), [gitops-engine](https://github.com/prune998/gitops-engine), [Grafana](https://github.com/prune998/grafana), [Kubernetes](https://github.com/prune998/kubernetes), [Crossplane](https://github.com/prune998/crossplane), [kube-capacity](https://github.com/prune998/kube-capacity), [SFTPGo](https://github.com/prune998/sftpgo) and [its Helm chart](https://github.com/prune998/helm-chart), [Homebrew core](https://github.com/prune998/homebrew-core)…
+Maintainer of [KubeColor](https://github.com/kubecolor/kubecolor) (kubectl output colorizer) and of a [friendly fork of Stern](https://github.com/stern/stern) (multi-pod log tailing). Patches and features contributed upstream to [Argo CD](https://github.com/argoproj/argo-cd), [Kargo](https://github.com/akuity/kargo), [ApplicationSet](https://github.com/argoproj/applicationset), [gitops-engine](https://github.com/argoproj/gitops-engine), [Grafana](https://github.com/grafana/grafana), [Kubernetes](https://github.com/kubernetes/kubernetes), [Crossplane](https://github.com/crossplane/crossplane), [kube-capacity](https://github.com/robscott/kube-capacity), [SFTPGo](https://github.com/drakkan/sftpgo) and [its Helm chart](https://github.com/sftpgo/helm-chart), [Homebrew core](https://github.com/Homebrew/homebrew-core)…
 
 ---
 Thanks for reading!
