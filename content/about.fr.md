@@ -13,43 +13,89 @@ Pour le moment, seulement Prune est sur le pont. Venez nous rejoindre !
 
 ## Projets
 
-Tout ce que je code vit sur GitHub — en voici les points saillants, tirés de mes
-[dépôts personnels](https://github.com/prune998?tab=repositories) et de
-[l'organisation Pirate Makers](https://github.com/orgs/pirate-makers/repositories).
+<div class="about-callout">
+<p>Tout ce que je code vit sur GitHub — en voici les points saillants, tirés de mes <a href="https://github.com/prune998?tab=repositories">dépôts personnels</a> et de <a href="https://github.com/orgs/pirate-makers/repositories">l'organisation Pirate Makers</a>.</p>
+</div>
 
-### L'organisation Pirate Makers
+### 🏴‍☠️ L'organisation Pirate Makers
 
-| Projet | Description |
-|---|---|
-| [blog](https://github.com/pirate-makers/blog) | Ce blog même — Hugo, thèmes personnalisés, pipeline CV vers PDF |
-| [piratemakers.ca](https://github.com/pirate-makers/piratemakers.ca) | Le premier blog des Pirate Makers |
-| [shapeokolaser](https://github.com/pirate-makers/shapeokolaser) | Post-processeur laser et outils pour ShapeOKO et Autodesk Fusion360 |
-| [cnctools](https://github.com/pirate-makers/cnctools) | Outils pour gravure CNC, laser et manipulation d'images |
-| [droneMetrologyExporter](https://github.com/pirate-makers/droneMetrologyExporter) | Extraction des données de vol d'un drone DJI Mini 2 depuis les fichiers vidéo (Go) |
-| [hqPeakHours](https://github.com/pirate-makers/hqPeakHours) | Calendrier des heures de pointe d'Hydro-Québec |
-| [db2m4atag](https://github.com/pirate-makers/db2m4atag) | Tagger des fichiers m4a depuis une base iTunes SQLite (Go) |
+<div class="projects-grid">
+<a class="project-card" href="https://github.com/pirate-makers/shapeokolaser">
+  <span class="project-name">🔦 shapeokolaser</span>
+  <span class="project-desc">Post-processeur laser et outils pour ShapeOKO et Autodesk Fusion360</span>
+</a>
+<a class="project-card" href="https://github.com/pirate-makers/cnctools">
+  <span class="project-name">🪚 cnctools</span>
+  <span class="project-desc">Outils pour gravure CNC, laser et manipulation d'images</span>
+</a>
+<a class="project-card" href="https://github.com/pirate-makers/droneMetrologyExporter">
+  <span class="project-name">🚁 droneMetrologyExporter</span>
+  <span class="project-desc">Extraction des données de vol d'un drone DJI Mini 2 depuis les fichiers vidéo</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span></span>
+</a>
+<a class="project-card" href="https://github.com/pirate-makers/db2m4atag">
+  <span class="project-name">🎵 db2m4atag</span>
+  <span class="project-desc">Tagger des fichiers m4a depuis une base iTunes SQLite</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span></span>
+</a>
+</div>
 
-### Projets personnels — récents
+### 🚀 Projets personnels — récents
 
-| Projet | Description |
-|---|---|
-| [enginedj5multitool](https://github.com/prune998/enginedj5multitool) | Boîte à outils pour les bases de données Denon Engine DJ (Go) |
-| [normMP3](https://github.com/prune998/normMP3) | Normalisation de MP3 par lots (Go) |
-| [abletonlink-client-go](https://github.com/prune998/abletonlink-client-go) | Bibliothèque cliente Ableton Link pour Go |
-| [hb_go_version5](https://github.com/prune998/hb_go_version5) | Réécriture de HB_version5 en Go |
-| [dbus-geofence-wifi](https://github.com/prune998/dbus-geofence-wifi) | Venus OS / Victron : bascule automatique du Wi-Fi par géorepérage (Go) |
-| [nodepool-labeler](https://github.com/prune998/nodepool-labeler) | Opérateur Kubernetes qui labellise les instances cloud selon les NodePool (Go) |
-| [nhlPartyScore](https://github.com/prune998/nhlPartyScore) | Fait clignoter vos lumières Philips Hue quand votre équipe de la LNH marque (Go) |
-| [nml2text](https://github.com/prune998/nml2text) | Conversion des playlists Traktor (NML) en texte (Go) |
-| [docker-registry-cleaner](https://github.com/prune998/docker-registry-cleaner) | Nettoyage des images d'un registre Docker distant (Go) |
-| [getall](https://github.com/prune998/getall) | Plugin kubectl pour lister toutes les ressources d'un namespace |
-| [watchfiletail](https://github.com/prune998/watchfiletail) | Surveille des dossiers et suit les fichiers correspondants (`tail -f`) (Go) |
+<div class="projects-grid">
+<a class="project-card" href="https://github.com/prune998/enginedj5multitool">
+  <span class="project-name">🎧 enginedj5multitool</span>
+  <span class="project-desc">Boîte à outils pour les bases de données Denon Engine DJ</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span><span>⭐ 5</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/normMP3">
+  <span class="project-name">🔊 normMP3</span>
+  <span class="project-desc">UI de normalisation audio de MP3 par lots</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/abletonlink-client-go">
+  <span class="project-name">🔗 abletonlink-client-go</span>
+  <span class="project-desc">Bibliothèque cliente Ableton Link pour Go (vibecoded)</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/dbus-geofence-wifi">
+  <span class="project-name">🌐 dbus-geofence-wifi</span>
+  <span class="project-desc">Venus OS / Victron : bascule automatique du Wi-Fi par géorepérage</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/nodepool-labeler">
+  <span class="project-name">☸️ nodepool-labeler</span>
+  <span class="project-desc">Opérateur Kubernetes qui labellise les instances cloud selon les NodePool</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span><span>⭐ 2</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/nhlPartyScore">
+  <span class="project-name">🏒 nhlPartyScore</span>
+  <span class="project-desc">Fait clignoter vos lumières Philips Hue quand votre équipe de la LNH marque (Go, vibecoded)</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/nml2text">
+  <span class="project-name">🎚️ nml2text</span>
+  <span class="project-desc">Conversion des playlists Traktor (NML) en texte pour import facile dans les vidéo Youtube</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span><span>⭐ 1</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/docker-registry-cleaner">
+  <span class="project-name">🧹 docker-registry-cleaner</span>
+  <span class="project-desc">Nettoyage des images d'un registre Docker distant</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span><span>⭐ 1</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/getall">
+  <span class="project-name">🧰 getall</span>
+  <span class="project-desc">Plugin kubectl pour lister toutes les ressources d'un namespace</span>
+  <span class="project-meta"><span class="lang-pill">kubectl</span></span>
+</a>
+<a class="project-card" href="https://github.com/prune998/watchfiletail">
+  <span class="project-name">👀 watchfiletail</span>
+  <span class="project-desc">Surveille des dossiers et suit les fichiers correspondants (<code>tail -f</code>)</span>
+  <span class="project-meta"><span class="lang-pill" style="--pill-color:#00ADD8">Go</span></span>
+</a>
+</div>
 
-### Projets plus anciens (sélection)
-
-[certmerge-operator](https://github.com/prune998/certmerge-operator) (opérateur Kubernetes fusionnant des secrets TLS, 30★) · [gohoneywellapi](https://github.com/prune998/gohoneywellapi) (API Go pour thermostats Honeywell T9/T10) · [kafka-health](https://github.com/prune998/kafka-health) (sonde de santé Kafka pour Kubernetes) · [go-docker-image-exist](https://github.com/prune998/go-docker-image-exist) · [gojsontoenv](https://github.com/prune998/gojsontoenv) · [bleve-geo-index](https://github.com/prune998/bleve-geo-index) · [influxdb-0.8-0.9-proxy](https://github.com/prune998/influxdb-0.8-0.9-proxy)
-
-### Contributions open source
+### 🤝 Contributions open source
 
 Mainteneur de [KubeColor](https://github.com/prune998/kubecolor) (colorisation de kubectl) et d'un [fork amical de Stern](https://github.com/prune998/stern) (suivi de logs multi-pods). Correctifs et fonctionnalités contribués en amont à [Argo CD](https://github.com/prune998/argo-cd), [Kargo](https://github.com/prune998/kargo), [ApplicationSet](https://github.com/prune998/applicationset), [gitops-engine](https://github.com/prune998/gitops-engine), [Grafana](https://github.com/prune998/grafana), [Kubernetes](https://github.com/prune998/kubernetes), [Crossplane](https://github.com/prune998/crossplane), [kube-capacity](https://github.com/prune998/kube-capacity), [SFTPGo](https://github.com/prune998/sftpgo) et [son chart Helm](https://github.com/prune998/helm-chart), [Homebrew core](https://github.com/prune998/homebrew-core)…
 

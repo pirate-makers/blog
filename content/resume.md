@@ -50,10 +50,10 @@ Switched to **Go development** and building with AI. I'm currently working on an
 Infrastructure/Platform Team
 
 - Building an AI-driven "Platform Factory": agentic automation that turns recurring platform operations into autonomous workflows.
-- Own developer-facing infrastructure abstractions: Terraform, Kubernetes, GCP, Helm, CI/CD across GitLab and GitHub — product teams ship without touching raw infrastructure and without infra team help.
+- Owned developer-facing infrastructure abstractions: Terraform, Kubernetes, GCP, Helm, CI/CD across GitLab and GitHub — product teams ship without touching raw infrastructure and 95% without infra team help.
 - Led the 10 year old GitLab+CI/CD to GitHub+Actions migration: 700 repos moved, CI with GH actions, CD with Argo CD, Kargo promotions, custom Argo ApplicationSets and repository discovery — fleet-wide GitOps delivery.
 - Migrated observability from Prometheus/Thanos to VictoriaMetrics, Grafana, and Loki, cutting down 99% of false positive oncalls and alerts.
-- Created Internal Developper Platform (IDP) and Application Registry and AI tooling to standardize our repos and enable faster project boostrap.
+- Created Internal Developper Platform (IDP) and Application Registry and AI tooling to standardize our repos. Allowing 80% faster project boostrap.
 
 *Tech: Kubernetes, GCP, Terraform, Helm, Argo CD, Kargo, GitHub Actions, VictoriaMetrics, Grafana, Loki, Claude (agentic AI), Go.*
 
